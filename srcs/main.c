@@ -6,7 +6,7 @@
 /*   By: ezalos <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 17:51:29 by ezalos            #+#    #+#             */
-/*   Updated: 2020/03/26 18:46:59 by ezalos           ###   ########.fr       */
+/*   Updated: 2020/03/26 18:53:55 by ezalos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ void		rot(t_vector *vct, int rot)
 
 int		init(t_crypt *crypto, char *msg, char *key)
 {
-	crypto->msg = vectorise(msg)
-	crypto->key = vectorise(key)
+	crypto->msg = vct_newstr(msg);
+	crypto->key = vct_newstr(key);
+	if (crypto->msg->len % 2 == 1)
+		vct_addchar(crypto->msg, '\0');
 }
 
 int		main(int ac, char **av)
