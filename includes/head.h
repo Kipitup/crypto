@@ -6,7 +6,7 @@
 /*   By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 11:15:02 by ldevelle          #+#    #+#             */
-/*   Updated: 2020/03/26 18:55:12 by ezalos           ###   ########.fr       */
+/*   Updated: 2020/03/26 19:32:18 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct 		s_crypt{
 	t_vector 		*msg;
 	t_vector 		*key;
 	t_feistel_hash	hash;
-}					t_crypt
+}					t_crypt;
 
+void	clean_feistel(t_crypt **crypto);
 #endif
