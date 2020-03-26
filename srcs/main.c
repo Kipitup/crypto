@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   head.h                                             :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ezalos <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/12 11:15:02 by ldevelle          #+#    #+#             */
-/*   Updated: 2020/03/26 18:10:07 by ezalos           ###   ########.fr       */
+/*   Created: 2020/03/26 17:51:29 by ezalos            #+#    #+#             */
+/*   Updated: 2020/03/26 17:54:03 by ezalos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HEAD_H
-# define HEAD_H
 
-# include "libft.h"
-// # include "auto_project.h"
+#include "includes/head.h"
 
-typedef int		(*t_int_func)(char *);
 
-typedef struct 		s_crypt{
-	t_vector 		*msg;
-	t_vector 		*key;
 
-}					t_crypt
 
-#endif
+
+int		main(void)
+{
+	
+			
+			
+			
+	return (0);
+}
