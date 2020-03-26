@@ -6,7 +6,7 @@
 #    By: fkante <fkante@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/19 17:11:38 by fkante            #+#    #+#              #
-#    Updated: 2020/03/12 16:26:29 by amartino         ###   ########.fr        #
+#    Updated: 2020/03/26 20:35:54 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ vpath %.h $(INCLUDES)
 
 # FLAGS
 ifeq ($(debug), 0)
-	CFLAGS += -g3
+	CFLAGS = -g3
 else ifeq ($(debug), 1)
 	CFLAGS += -g3
 	CFLAGS += -fsanitize=address,undefined

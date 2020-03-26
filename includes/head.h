@@ -6,7 +6,7 @@
 /*   By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 11:15:02 by ldevelle          #+#    #+#             */
-/*   Updated: 2020/03/26 19:32:18 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/03/26 20:27:32 by ezalos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 # include "libft.h"
 // # include "auto_project.h"
 
-typedef t_vector	*(*t_feistel_hash)(t_vector *);
+# define FEISTEL_CYCLES		1
+
+typedef t_vector	*(*t_feistel_hash)(t_vector *, t_vector *);
 
 typedef struct 		s_crypt{
 	t_vector 		*msg;
