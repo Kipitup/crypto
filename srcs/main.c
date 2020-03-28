@@ -1,4 +1,5 @@
 #include "head.h"
+#define MAX_LEN_PRINT 12
 
 static void		apply_xor(t_vector *left, t_vector *right)
 {
@@ -31,22 +32,38 @@ void		apply_key(t_vector *msg, t_vector *key)
 	}
 }
 
+
+
 void	vct_print_bin_nl(t_vector *vector)
 {
+	size_t		i;
+
 	if (vector != NULL && vector->str != NULL)
 	{
 		ft_printf("%d ", vector->len);
-		ft_printf("[%*s]\t", vector->len, vector->str);
-		ft_printf("%b\n", 2, vector->str, 2);
+		ft_printf("[");
+		vct_print(vector);
+		ft_printf("]");
+		i = 0;
+		while (i < MAX_LEN_PRINT - vector->len)
+		{
+			ft_printf(" ");
+			i++;
+		}
+		ft_printf("\t");
+		i = 0;
+		while (i < vector->len)
+		{
+			ft_printf("%0b ", 2, vector->str[i++]);
+		}
+		ft_printf("\n");
 	}
 }
 
-void	feistel_print_debug(t_vector *left, t_vector *right)
+void	feistel_print_debug(char *name, t_vector *vct)
 {
-	ft_printf("Left : ");
-	vct_print_bin_nl(left);
-	ft_printf("Right: ");
-	vct_print_bin_nl(right);
+	ft_printf("%*s : ", MAX_LEN_PRINT, name);
+	vct_print_bin_nl(vct);
 }
 
 t_vector	*feistel(t_crypt *crypto)
@@ -58,15 +75,19 @@ t_vector	*feistel(t_crypt *crypto)
 
 	left = vct_ndup(crypto->msg, crypto->msg->len / 2);
 	right = vct_dup_from(crypto->msg, crypto->msg->len / 2);
-	feistel_print_debug(left, right);
+	feistel_print_debug("Left", right);
+	feistel_print_debug("Right", right);
+	feistel_print_debug("Key", crypto->key);
 	while (i < crypto->nb_cycles)
 	{
 		crypto->hash(right, crypto->key);
+		feistel_print_debug("1 Right ^ K", right);
 		apply_xor(left, right);
-		feistel_print_debug(left, right);
+		feistel_print_debug("2 Left ^ R", left);
 		crypto->hash(left, crypto->key);
+		feistel_print_debug("3 Left ^ K", left);
 		apply_xor(right, left);
-		feistel_print_debug(right, left);
+		feistel_print_debug("4 Right ^ L", right);
 		i++;
 	}
 	cypher = vct_joinfree(&right, &left, BOTH);
@@ -94,9 +115,9 @@ static t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func)
 
 void	print_crypt(t_crypt *crypto)
 {
-	ft_printf("message %d : [%s]\n", crypto->msg->len, crypto->msg->str);
-	ft_printf("key %d : [%s]\n", crypto->key->len, crypto->key->str);
-	ft_printf("cypher %d : [%s]\n", crypto->cypher->len, crypto->cypher->str);
+	feistel_print_debug("message", crypto->msg);
+	feistel_print_debug("key", crypto->key);
+	feistel_print_debug("cypher", crypto->cypher);
 }
 
 int		main(int ac, char **av)
