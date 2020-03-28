@@ -6,7 +6,7 @@
 /*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/13 13:23:12 by amartino          #+#    #+#             */
-/*   Updated: 2020/03/12 14:34:23 by amartino         ###   ########.fr       */
+/*   Updated: 2020/03/28 16:32:56 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 
 ssize_t		vct_chr_str(t_vector *vector, char *find)
 {
-	ssize_t		index;
-	ssize_t		j;
+	size_t		index;
+	size_t		j;
 
 	index = 0;
 	while (index <= vector->len)

@@ -6,7 +6,7 @@
 /*   By: fkante <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 15:15:54 by fkante            #+#    #+#             */
-/*   Updated: 2020/03/12 12:35:59 by amartino         ###   ########.fr       */
+/*   Updated: 2020/03/28 16:30:07 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	*ft_memchr(const void *s, int c, size_t n)
 {
-	const void	*ret;
+	void		*ret;
 	char		*tmp;
-	size_t 	i;
+	size_t 		i;
 
 	i = 0;
 	ret = NULL;
