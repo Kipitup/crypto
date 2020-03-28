@@ -6,7 +6,7 @@
 /*   By: amartino <a.martino@sutdent.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/09 18:54:11 by amartino          #+#    #+#             */
-/*   Updated: 2020/03/17 16:55:12 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/03/28 17:10:47 by ezalos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define GRAPH_H
 
 # include <stdlib.h>
+# include <inttypes.h>
 
 /*
 **								ADJACENCY LIST
