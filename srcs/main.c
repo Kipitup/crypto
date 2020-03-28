@@ -62,7 +62,7 @@ void	vct_print_bin_nl(t_vector *vector)
 
 void	feistel_print_debug(char *name, t_vector *vct)
 {
-	ft_printf("%*s : ", MAX_LEN_PRINT, name);
+	ft_printf("%-*s : ", MAX_LEN_PRINT, name);
 	vct_print_bin_nl(vct);
 }
 
