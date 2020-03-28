@@ -6,7 +6,7 @@
 /*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 10:56:01 by amartino          #+#    #+#             */
-/*   Updated: 2020/02/27 13:40:54 by amartino         ###   ########.fr       */
+/*   Updated: 2020/03/28 18:09:19 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 t_vector	*vct_dup_from(t_vector *vector, size_t index)
 {
 	t_vector	*dup;
+	size_t		len;
 
 	dup = NULL;
 	if (vector != NULL && vector->str != NULL)
@@ -30,7 +31,8 @@ t_vector	*vct_dup_from(t_vector *vector, size_t index)
 			dup = vct_new(vector->size - index);
 			if (dup != NULL)
 			{
-				if (vct_pushstr(dup, (vector->str + index)) == FAILURE)
+				len = vector->len - index;
+				if (vct_addnstr(dup, (vector->str + index), len) == FAILURE)
 					vct_del(&dup);
 			}
 
