@@ -30,6 +30,13 @@ void		apply_key(t_vector *msg, t_vector *key)
 		}
 	}
 }
+void	feistel_print_debug(t_vector *left, t_vector *right)
+{
+	ft_printf("Left: ");
+	vct_print_nl(left);
+	ft_printf("Right: ");
+	vct_print_nl(right);
+}
 
 t_vector	*feistel(t_crypt *crypto)
 {
@@ -40,12 +47,15 @@ t_vector	*feistel(t_crypt *crypto)
 
 	left = vct_ndup(crypto->msg, crypto->msg->len / 2);
 	right = vct_dup_from(crypto->msg, crypto->msg->len / 2);
+	feistel_print_debug(left, right);
 	while (i < crypto->nb_cycles)
 	{
 		crypto->hash(right, crypto->key);
 		apply_xor(left, right);
+		feistel_print_debug(left, right);
 		crypto->hash(left, crypto->key);
 		apply_xor(right, left);
+		feistel_print_debug(left, right);
 		i++;
 	}
 	cypher = vct_joinfree(&right, &left, BOTH);
@@ -73,9 +83,9 @@ static t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func)
 
 void	print_crypt(t_crypt *crypto)
 {
-	ft_printf("message : %s\n", crypto->msg->str);
-	ft_printf("key: [%s]\n", crypto->key->str);
-	ft_printf("cypher: [%s]\n", crypto->cypher->str);
+	ft_printf("message %d : [%s]\n", crypto->msg->len, crypto->msg->str);
+	ft_printf("key %d : [%s]\n", crypto->key->len, crypto->key->str);
+	ft_printf("cypher %d : [%s]\n", crypto->cypher->len, crypto->cypher->str);
 }
 
 int		main(int ac, char **av)
