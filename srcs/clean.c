@@ -9,12 +9,3 @@ void	clean_feistel(t_crypt **crypto)
 		ft_memdel((void**)crypto);
 	}
 }
-
-/*
-vct_func(crypto, func_to_apply);
-
-vct_func()
-{
-	crypto->str = func_to_apply(crypto->str, crypto->len);
-}
-*/
