@@ -75,7 +75,8 @@ t_vector	*feistel(t_crypt *crypto)
 
 	left = vct_ndup(crypto->msg, crypto->msg->len / 2);
 	right = vct_dup_from(crypto->msg, crypto->msg->len / 2);
-	feistel_print_debug("Left", right);
+	feistel_print_debug("Message", crypto->msg);
+	feistel_print_debug("Left", left);
 	feistel_print_debug("Right", right);
 	feistel_print_debug("Key", crypto->key);
 	while (i < crypto->nb_cycles)
@@ -91,6 +92,7 @@ t_vector	*feistel(t_crypt *crypto)
 		i++;
 	}
 	cypher = vct_joinfree(&right, &left, BOTH);
+	feistel_print_debug("Cypher", cypher);
 	return (cypher);
 }
 
