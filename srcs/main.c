@@ -75,6 +75,7 @@ t_vector	*feistel(t_crypt *crypto)
 
 	left = vct_ndup(crypto->msg, crypto->msg->len / 2);
 	right = vct_dup_from(crypto->msg, crypto->msg->len / 2);
+	ft_printf("{c_red}");
 	feistel_print_debug("Message", crypto->msg);
 	feistel_print_debug("Left", left);
 	feistel_print_debug("Right", right);
@@ -82,6 +83,7 @@ t_vector	*feistel(t_crypt *crypto)
 	while (i < crypto->nb_cycles)
 	{
 		crypto->hash(right, crypto->key);
+		ft_printf("{c_magenta}");
 		feistel_print_debug("1 Right ^ K", right);
 		apply_xor(left, right);
 		feistel_print_debug("2 Left ^ R", left);
@@ -93,6 +95,7 @@ t_vector	*feistel(t_crypt *crypto)
 	}
 	cypher = vct_joinfree(&right, &left, BOTH);
 	feistel_print_debug("Cypher", cypher);
+	ft_printf("{c_end}");
 	return (cypher);
 }
 
@@ -117,9 +120,11 @@ static t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func)
 
 void	print_crypt(t_crypt *crypto)
 {
+	ft_printf("{c_green}");
 	feistel_print_debug("message", crypto->msg);
 	feistel_print_debug("key", crypto->key);
 	feistel_print_debug("cypher", crypto->cypher);
+	ft_printf("{c_end}");
 }
 
 int		main(int ac, char **av)
