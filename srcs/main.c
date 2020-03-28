@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ezalos <marvin@42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/26 17:51:29 by ezalos            #+#    #+#             */
-/*   Updated: 2020/03/28 17:33:59 by amartinod        ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "head.h"
 
 static void		apply_xor(t_vector *left, t_vector *right)
@@ -83,18 +71,24 @@ static t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func)
 	return (crypto);
 }
 
+void	print_crypt(t_crypt *crypto)
+{
+	ft_printf("message : %s\n", crypto->msg->str);
+	ft_printf("key: [%s]\n", crypto->key->str);
+	ft_printf("cypher: [%s]\n", crypto->cypher->str);
+}
+
 int		main(int ac, char **av)
 {
 	t_crypt		*crypto;
-	t_vector	*cypher;
 
 	if (ac > 2)
 	{
 		crypto = init(av[1], av[2], &apply_key);
 		if (crypto != NULL)
 		{
-			cypher = feistel(crypto);
-			ft_printf("message : %s\nkey: %s\ncypher: |%s|\n", crypto->msg->str, crypto->key->str, cypher->str);
+			crypto->cypher = feistel(crypto);
+			print_crypt(crypto);
 		}
 		clean_feistel(&crypto);
 	}
