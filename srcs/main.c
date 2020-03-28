@@ -30,12 +30,23 @@ void		apply_key(t_vector *msg, t_vector *key)
 		}
 	}
 }
+
+void	vct_print_bin_nl(t_vector *vector)
+{
+	if (vector != NULL && vector->str != NULL)
+	{
+		ft_printf("%d ", vector->len);
+		ft_printf("[%*s]\t", vector->len, vector->str);
+		ft_printf("%b\n", 2, vector->str, 2);
+	}
+}
+
 void	feistel_print_debug(t_vector *left, t_vector *right)
 {
-	ft_printf("Left: ");
-	vct_print_nl(left);
+	ft_printf("Left : ");
+	vct_print_bin_nl(left);
 	ft_printf("Right: ");
-	vct_print_nl(right);
+	vct_print_bin_nl(right);
 }
 
 t_vector	*feistel(t_crypt *crypto)
@@ -55,7 +66,7 @@ t_vector	*feistel(t_crypt *crypto)
 		feistel_print_debug(left, right);
 		crypto->hash(left, crypto->key);
 		apply_xor(right, left);
-		feistel_print_debug(left, right);
+		feistel_print_debug(right, left);
 		i++;
 	}
 	cypher = vct_joinfree(&right, &left, BOTH);
@@ -97,6 +108,9 @@ int		main(int ac, char **av)
 		crypto = init(av[1], av[2], &apply_key);
 		if (crypto != NULL)
 		{
+			crypto->cypher = feistel(crypto);
+			print_crypt(crypto);
+			crypto->msg = crypto->cypher;
 			crypto->cypher = feistel(crypto);
 			print_crypt(crypto);
 		}
