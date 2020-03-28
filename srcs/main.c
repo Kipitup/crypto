@@ -6,13 +6,13 @@
 /*   By: ezalos <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 17:51:29 by ezalos            #+#    #+#             */
-/*   Updated: 2020/03/26 20:33:39 by ezalos           ###   ########.fr       */
+/*   Updated: 2020/03/28 17:33:59 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "head.h"
 
-void		apply_xor(t_vector *left, t_vector *right)
+static void		apply_xor(t_vector *left, t_vector *right)
 {
 	size_t	i = 0;
 
@@ -23,14 +23,14 @@ void		apply_xor(t_vector *left, t_vector *right)
 	}
 }
 
-void		apply_key(t_vector *msg, t_vector *key,int rot)
+void		apply_key(t_vector *msg, t_vector *key)
 {
 	size_t		i = 0;
 	size_t		j;
 
 	if (msg != NULL && msg->str != NULL)
 	{
-		while (i + j < msg->len)
+		while (i < msg->len)
 		{
 			j = 0;
 			while (j < key->len)
@@ -45,13 +45,14 @@ void		apply_key(t_vector *msg, t_vector *key,int rot)
 
 t_vector	*feistel(t_crypt *crypto)
 {
-	t_vector	*left = NULL;
-	t_vector	*right = NULL;
+	t_vector	*left;
+	t_vector	*right;
+	t_vector	*cypher;
 	size_t		i = 0;
 
 	left = vct_ndup(crypto->msg, crypto->msg->len / 2);
 	right = vct_dup_from(crypto->msg, crypto->msg->len / 2);
-	while (i < crypto->cycles)
+	while (i < crypto->nb_cycles)
 	{
 		crypto->hash(right, crypto->key);
 		apply_xor(left, right);
@@ -63,7 +64,7 @@ t_vector	*feistel(t_crypt *crypto)
 	return (cypher);
 }
 
-t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func)
+static t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func)
 {
 	t_crypt		*crypto;
 
@@ -73,7 +74,7 @@ t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func)
 		crypto->msg = vct_newstr(msg);
 		crypto->key = vct_newstr(key);
 		crypto->hash = hash_func;
-		crypto->cycles = FEISTEL_CYCLES;
+		crypto->nb_cycles = FEISTEL_CYCLES;
 		if (vct_len(crypto->msg) % 2 == 1)
 			vct_addchar(crypto->msg, '\0');
 		if (crypto->msg == NULL || crypto->key == NULL)
@@ -89,11 +90,11 @@ int		main(int ac, char **av)
 
 	if (ac > 2)
 	{
-		crypto = init(av[1], av[2], &apply_key());
+		crypto = init(av[1], av[2], &apply_key);
 		if (crypto != NULL)
 		{
 			cypher = feistel(crypto);
-			ft_printf("message : %s\nkey: %s\ncypher: %s\n", crypto->msg->str, crypto->key->str, cypher->str);
+			ft_printf("message : %s\nkey: %s\ncypher: |%s|\n", crypto->msg->str, crypto->key->str, cypher->str);
 		}
 		clean_feistel(&crypto);
 	}
