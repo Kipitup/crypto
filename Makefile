@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/08 21:04:39 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/29 15:08:45 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,8 @@ AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
-mk			=	./.makegenius/mk_dependencies
-mk_p		= 	$(mk)/PAT/
+mk			=	./.makegenius
+mk_p		= 	$(mk)/srcs_path/
 include_pat	=	$(MAIN_FOLD:%=$(mk_p)pat_%.mk)
 include_pat	+=	$(mk_p)pat_.mk
 include_dep	=	$(include_pat)
@@ -59,10 +59,8 @@ MSG		?= "Automated commit message!"
 ##########################
 
 ifeq ($(UNAME),Linux)
-update_head	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_protos_linux.sh % $(MASTER);)
-update_head	+=	sh .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
-update_dep	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_mk_srcs.sh % $(MASTER);)
-update_dep	+=	sh .makegenius/scripts/get_mk_srcs.sh '' $(MASTER) '' '-depth 1';
+update_head	=	bash .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
+update_dep	=	bash .makegenius/scripts/get_mk_srcs.sh '' $(MASTER) '' '-depth 1';
 else
 update_head	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_protos.sh % $(MASTER);)
 update_head	+=	sh .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
@@ -178,8 +176,8 @@ endef
 
 all :	$(modules) $(NAME) auteur $(DIR_OBJ)
 
-ifeq ($(LIB_PRJCT), y)
-$(NAME):	$(OBJS) $(HEAD_DIR)
+ifeq ($(LIB_PRJCT),y)
+$(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
 	$(call run_and_test, $(AR) $(NAME) $(OBJS))
 else
 $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
@@ -297,7 +295,7 @@ object_ready :	$(DIR_OBJ)
 
 prototypes :	auto_dir
 		$(update_head)
-		sh .makegenius/scripts/get_master_head.sh $(HEAD_DIR) $(NAME)
+		bash .makegenius/scripts/get_master_head.sh $(HEAD_DIR) $(NAME)
 		echo "\$(YELLOW)automatic headers\$(END)\\thas been \$(GREEN)\\t\\t  created\$(END)"
 
 auto_dir :
