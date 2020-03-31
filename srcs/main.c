@@ -9,10 +9,10 @@ int		main(int ac, char **av)
 		crypto = init(av[1], av[2], &apply_key);
 		if (crypto != NULL)
 		{
-			crypto->cypher = feistel(crypto);
+			crypto->cypher = feistel(crypto, CRYPT);
 			print_crypt(crypto);
 			crypto->msg = crypto->cypher;
-			crypto->cypher = feistel(crypto);
+			crypto->cypher = feistel(crypto, UNCRYPT);
 			print_crypt(crypto);
 		}
 		clean_feistel(&crypto);

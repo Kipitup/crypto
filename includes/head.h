@@ -3,8 +3,10 @@
 
 # include "libft.h"
 
-# define FEISTEL_CYCLES		1
+# define FEISTEL_CYCLES		10
 # define MAX_LEN_PRINT		12
+# define CRYPT				0
+# define UNCRYPT			1
 
 typedef void	(*t_feistel_hash)(t_vector *, t_vector *, t_vector *);
 
