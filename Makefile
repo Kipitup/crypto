@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/29 15:08:45 by ezalos           ###   ########.fr        #
+#    Updated: 2020/03/29 15:27:49 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -177,7 +177,7 @@ endef
 all :	$(modules) $(NAME) auteur $(DIR_OBJ)
 
 ifeq ($(LIB_PRJCT),y)
-$(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
+$(NAME):	$(OBJS) $(HEAD_DIR)
 	$(call run_and_test, $(AR) $(NAME) $(OBJS))
 else
 $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)

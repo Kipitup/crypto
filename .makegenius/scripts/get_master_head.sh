@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/23 19:04:48 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/29 18:34:09 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/03/31 19:07:41 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,9 @@ echo path $path
 echo spe $spe
 
 if [ "$(uname)" == "Darwin" ]; then
-	echo "#ifndef \c" > $path
+	echo -n "#ifndef" > $path
 	printf $spe | awk '{ print toupper($1) }' >> $path
-	echo "# define \c" >> $path
+	echo -n "# define" >> $path
 	printf $spe | awk '{ print toupper($1) }' >> $path
 	echo "" >> $path
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
