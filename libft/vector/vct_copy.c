@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vct_replace_char_at.c                              :+:      :+:    :+:   */
+/*   vct_copy.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amartinod <a.martino@sutdent.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/12 11:28:46 by amartino          #+#    #+#             */
-/*   Updated: 2020/04/01 16:47:30 by amartinod        ###   ########.fr       */
+/*   Created: 2020/04/01 17:45:11 by amartinod         #+#    #+#             */
+/*   Updated: 2020/04/01 17:48:37 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,17 @@
 **	As for all vectors functions, if the LENGHT of the new string is bigger
 **	than the string SIZE, an equivalent reallocation occurs.
 */
-
-void			vct_replace_char_at(t_vector *vector, size_t index, char c)
+void		vct_copy(t_vector *src, t_vector *dest)
 {
-	if (vector != NULL && vector->str != NULL && index < vector->len)
-		vector->str[index] = c;
+	size_t	i;
+
+	i = 0;
+	if (src != NULL && dest != NULL)
+	{
+		while (i < src->len && i < dest->len)
+		{
+			dest->str[i] = src->str[i];
+			i++;
+		}
+	}
 }

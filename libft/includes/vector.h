@@ -6,7 +6,7 @@
 /*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/27 15:25:09 by amartino          #+#    #+#             */
-/*   Updated: 2020/03/11 20:58:13 by fkante           ###   ########.fr       */
+/*   Updated: 2020/04/01 17:49:08 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ t_vector		**vct_split(t_vector *input, char c);
 */
 int8_t			vct_addchar(t_vector *vector, char c);
 int8_t			vct_addchar_at(t_vector *vector, char c, size_t index);
-void			vct_replace_char_at(t_vector *vector, char c, size_t index);
+void			vct_replace_char_at(t_vector *vector, size_t index, char c);
 int8_t			vct_addstr(t_vector *vector, char *str);
 int8_t			vct_addnstr(t_vector *vector, char *str, size_t len);
 int8_t			vct_pushstr(t_vector *vector, char *str);
@@ -114,6 +114,7 @@ int8_t			vct_pop_from(t_vector *vector, size_t len, size_t index);
 **  	 JOIN	    **
 **********************
 */
+void			vct_copy(t_vector *src, t_vector *dest);
 t_vector 		*vct_sub(t_vector *vector, size_t start, size_t len);
 t_vector		*vct_dup(t_vector *vector);
 t_vector		*vct_ndup(t_vector *vector, size_t len);

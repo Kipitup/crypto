@@ -1,101 +1,103 @@
 #include "head.h"
 
-static void		apply_xor(t_vector *left, t_vector *right)
+static void		apply_xor(t_vector *left, t_vector *hash_ouptut)
 {
 	size_t	i = 0;
 
 	while (i < left->len)
 	{
-		left->str[i] ^= right->str[i];
+		left->str[i] ^= hash_ouptut->str[i];
 		i++;
 	}
 }
 
-void		apply_key(t_vector *msg, t_vector *key, t_vector *dest)
-{
-	size_t		i = 0;
-	size_t		j;
-
-	if (msg != NULL && msg->str != NULL)
-	{
-		dest->len = msg->len;
-		while (i < msg->len)
-		{
-			j = 0;
-			while ((j < key->len) && (i + j < msg->len))
-			{
-				dest->str[i + j] = (msg->str[i + j] ^ key->str[j]);
-				j++;
-			}
-			i += j;
-		}
-	}
-}
-
-void		next_key(t_vector *vector, size_t cycle)
+void			next_key(t_vector *key, t_vector *sub_key, size_t cycle)
 {
 	size_t		iteration;
 	intmax_t	seed;
 	size_t		i;
 
 	iteration = 0;
+	if (key == NULL)
+		return ;
+	seed = ft_seed_string(key->str, key->len);
+	srand(seed);
+	vct_copy(key, sub_key);
 	while (iteration < cycle)
 	{
-		seed = ft_seed_string(vector->str, vector->len);
-		srand(seed);
 		i = 0;
-		while (i < vector->len)
+		while (i < key->len)
 		{
-			vector->str[i] = (char)rand();
+			vct_replace_char_at(sub_key, i, (char)rand());
 			i++;
 		}
 		iteration++;
 	}
 }
 
-t_vector	*feistel(t_crypt *crypto, uint8_t state)
+static int8_t	feistel_cycle(t_crypt *crypto, t_vector *left, t_vector *right,
+		uint8_t state)
 {
-	t_vector	*left;
-	t_vector	*right;
-	t_vector	*cypher;
-	t_vector	*tmp;
-	t_vector	*key_save;
+	t_vector	*hash_ouptut;
+	t_vector	*sub_key;
 	size_t		i = 0;
 
-	left = vct_ndup(crypto->msg, crypto->msg->len / 2);
-	right = vct_dup_from(crypto->msg, crypto->msg->len / 2);
-	//ft_printf("{c_red}");
-	//feistel_print_debug("Message", crypto->msg);
-	//feistel_print_debug("Left", left);
-	//feistel_print_debug("Right", right);
-	//feistel_print_debug("Key", crypto->key);
-	tmp = vct_new(left->len + 1);
-	key_save = vct_dup(crypto->key);
+	hash_ouptut = vct_new(right->len + 1);
+	sub_key = vct_dup(crypto->key);
+	if (hash_ouptut == NULL || sub_key == NULL)
+		return (FAILURE);
 	//ft_printf("{c_magenta}");
 	while (i < crypto->nb_cycles)
 	{
 		if (state == CRYPT)
-			next_key(key_save, i);
+			next_key(crypto->key, sub_key, i);
 		else if (state == UNCRYPT)
-			next_key(key_save, crypto->nb_cycles - i - 1);
-		//feistel_print_debug("0 K", key_save);
-		crypto->hash(right, key_save, tmp);
-		//feistel_print_debug("1 Right ^ K = tmp", tmp);
-		apply_xor(left, tmp);
-		//feistel_print_debug("2 Left ^ tmp", left);
-		crypto->hash(left, key_save, tmp);
-		//feistel_print_debug("3 Left ^ K = tmp", tmp);
-		apply_xor(right, tmp);
-		//feistel_print_debug("4 Right ^ tmp", right);
-		key_save->len = 0;//quick fix
-		vct_cat(key_save, crypto->key);
+			next_key(crypto->key, sub_key, crypto->nb_cycles - i - 1);
+		ft_printf("sub_key for cycle %zu : %s\n", i, sub_key->str);
+		//feistel_print_debug("0 K", sub_key);
+		crypto->hash(right, sub_key, hash_ouptut);
+		//feistel_print_debug("1 Right ^ K = hash_ouptut", hash_ouptut);
+		apply_xor(left, hash_ouptut);
+		//feistel_print_debug("2 Left ^ hash_ouptut", left);
+		crypto->hash(left, sub_key, hash_ouptut);
+		//feistel_print_debug("3 Left ^ K = hash_ouptut", hash_ouptut);
+		apply_xor(right, hash_ouptut);
+		//feistel_print_debug("4 Right ^ hash_ouptut", right);
+		//	sub_key->len = 0;//quick fix
+		//	vct_cat(sub_key, crypto->key);
 		i++;
 	}
-	cypher = vct_joinfree(&right, &left, BOTH);
-	//feistel_print_debug("Cypher", cypher);
-	//ft_printf("{c_end}");
-	vct_del(&tmp);
-	vct_del(&key_save);
+	vct_del(&hash_ouptut);
+	vct_del(&sub_key);
+	return (SUCCESS);
+}
+
+t_vector		*feistel(t_crypt *crypto, uint8_t state)
+{
+	t_vector	*left;
+	t_vector	*right;
+	t_vector	*cypher;
+
+	cypher = NULL;
+	left = vct_ndup(crypto->msg, crypto->msg->len / 2);
+	right = vct_dup_from(crypto->msg, crypto->msg->len / 2);
+	if (left != NULL || right != NULL)
+	{
+		//ft_printf("{c_red}");
+		//feistel_print_debug("Message", crypto->msg);
+		//feistel_print_debug("Left", left);
+		//feistel_print_debug("Right", right);
+		//feistel_print_debug("Key", crypto->key);
+		if (feistel_cycle(crypto, left, right, state) == FAILURE)
+		{
+			vct_del(&left);
+			vct_del(&right);
+		}
+		cypher = vct_joinfree(&right, &left, BOTH);
+		//feistel_print_debug("Cypher", cypher);
+		//ft_printf("{c_end}");
+
+	}
 	return (cypher);
 }
 

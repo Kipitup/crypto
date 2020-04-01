@@ -6,7 +6,7 @@
 /*   By: fkante <fkante@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 15:50:31 by fkante            #+#    #+#             */
-/*   Updated: 2020/03/12 13:39:33 by amartino         ###   ########.fr       */
+/*   Updated: 2020/04/01 16:48:48 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int8_t		round_up_ld(t_vector *vector, uint64_t accuracy)
 
 	c = vct_getchar_at(vector, accuracy);
 	if (c >= '0' && c <= '9')
-		vct_replace_char_at(vector, c + 1, accuracy);
+		vct_replace_char_at(vector, accuracy, c + 1);
 	if (c == '9' || c == '.')
 	{
 		if ((round_up_ld(vector, accuracy - 1)) == SUCCESS)
@@ -28,7 +28,7 @@ static int8_t		round_up_ld(t_vector *vector, uint64_t accuracy)
 			if (c == '.')
 				return (SUCCESS);
 			else
-				vct_replace_char_at(vector, '0', accuracy);
+				vct_replace_char_at(vector, accuracy, '0');
 		}
 	}
 	return (SUCCESS);
