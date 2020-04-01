@@ -42,13 +42,13 @@ int		main(int ac, char **av)
 				crypto->msg = file;
 			}
 			crypto->cypher = feistel(crypto, CRYPT);
-			print_crypt(crypto);
-			ft_printf("\n\n\n");
 			crypto->msg = crypto->cypher;
 			crypto->cypher = feistel(crypto, UNCRYPT);
-			print_crypt(crypto);
+			ft_printf("%s", crypto->cypher->str);
 		}
 		clean_feistel(&crypto);
 	}
+	else
+		ft_printf("Usage: %s to_crypt key [CRYPT / UNCRYPT]\n", av[0]);
 	return (0);
 }

@@ -11,6 +11,14 @@ def execute(msg, key):
     answer = os.system(command_line)
     return answer
 
+def diff(file_1, file_2):
+    command_line = "diff " + file_1 + " " + file_2
+    print(command_line)
+    answer = os.system(command_line)
+    print(answer)
+    answer = os.system(command_line + " | wc -l")
+    return answer
+
 def read_file(path):
     file=open(path, "r")
     if file.mode == 'r':
@@ -37,6 +45,11 @@ path_to_crypt = directory + "CRYPT/"
 path_to_uncrypt = directory + "UNCRYPT/"
 
 
+def test_me(dir, file_1, file_2):
+    res = execute(dir + file_1, dir + file_2)
+    #write_file
+
+
 
 if __name__ == "__main__":
     list_of_tests = get_list_of_files(path_to_tests)
@@ -49,4 +62,20 @@ if __name__ == "__main__":
 #for each file
     #crypt it // check if different
     #uncrypt it // check if identical
+
+
+#test
+    #varier:
+        #cycles -> rand
+        #msg -> dossier
+        #key -> 
+    #tests:
+        #original == uncrypted
+            #faire un diff 
+        #original != crypted
+            #show un diff
+            #check each character ?
+
+
+
 
