@@ -11,22 +11,21 @@ static void		apply_xor(t_vector *left, t_vector *hash_ouptut)
 	}
 }
 
-void			next_key(t_vector *key, t_vector *sub_key, size_t cycle)
+void			next_key(t_vector *sub_key, size_t cycle)
 {
 	size_t		iteration;
 	intmax_t	seed;
 	size_t		i;
 
 	iteration = 0;
-	if (key == NULL)
+	if (sub_key == NULL)
 		return ;
-	seed = ft_seed_string(key->str, key->len);
-	srand(seed);
-	vct_copy(key, sub_key);
 	while (iteration < cycle)
 	{
 		i = 0;
-		while (i < key->len)
+		seed = ft_seed_string(sub_key->str, sub_key->len);
+		srand(seed);
+		while (i < sub_key->len)
 		{
 			vct_replace_char_at(sub_key, i, (char)rand());
 			i++;
@@ -50,10 +49,9 @@ static int8_t	feistel_cycle(t_crypt *crypto, t_vector *left, t_vector *right,
 	while (i < crypto->nb_cycles)
 	{
 		if (state == CRYPT)
-			next_key(crypto->key, sub_key, i);
+			next_key(sub_key, i);
 		else if (state == UNCRYPT)
-			next_key(crypto->key, sub_key, crypto->nb_cycles - i - 1);
-		ft_printf("sub_key for cycle %zu : %s\n", i, sub_key->str);
+			next_key(sub_key, crypto->nb_cycles - i - 1);
 		//feistel_print_debug("0 K", sub_key);
 		crypto->hash(right, sub_key, hash_ouptut);
 		//feistel_print_debug("1 Right ^ K = hash_ouptut", hash_ouptut);
@@ -63,8 +61,7 @@ static int8_t	feistel_cycle(t_crypt *crypto, t_vector *left, t_vector *right,
 		//feistel_print_debug("3 Left ^ K = hash_ouptut", hash_ouptut);
 		apply_xor(right, hash_ouptut);
 		//feistel_print_debug("4 Right ^ hash_ouptut", right);
-		//	sub_key->len = 0;//quick fix
-		//	vct_cat(sub_key, crypto->key);
+		vct_copy(sub_key, crypto->key);
 		i++;
 	}
 	vct_del(&hash_ouptut);

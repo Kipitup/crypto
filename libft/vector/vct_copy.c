@@ -6,7 +6,7 @@
 /*   By: amartinod <a.martino@sutdent.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:45:11 by amartinod         #+#    #+#             */
-/*   Updated: 2020/04/01 17:48:37 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/04/01 18:32:19 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 **	As for all vectors functions, if the LENGHT of the new string is bigger
 **	than the string SIZE, an equivalent reallocation occurs.
 */
-void		vct_copy(t_vector *src, t_vector *dest)
+void		vct_copy(t_vector *dest, t_vector *src)
 {
 	size_t	i;
 
