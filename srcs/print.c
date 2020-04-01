@@ -39,7 +39,9 @@ void	print_crypt(t_crypt *crypto)
 {
 	ft_printf("{c_green}");
 	feistel_print_debug("message", crypto->msg);
+	ft_printf("{c_blue}");
 	feistel_print_debug("key", crypto->key);
+	ft_printf("{c_red}");
 	feistel_print_debug("cypher", crypto->cypher);
 	ft_printf("{c_end}");
 }

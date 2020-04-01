@@ -11,6 +11,7 @@ int		main(int ac, char **av)
 		{
 			crypto->cypher = feistel(crypto, CRYPT);
 			print_crypt(crypto);
+			ft_printf("\n\n\n");
 			crypto->msg = crypto->cypher;
 			crypto->cypher = feistel(crypto, UNCRYPT);
 			print_crypt(crypto);
