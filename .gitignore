@@ -1,6 +1,5 @@
 *.code-workspace
 .DS_Store
 *.o
-test
 *.a
 crypto
