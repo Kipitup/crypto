@@ -20,5 +20,3 @@ void		apply_key(t_vector *msg, t_vector *key, t_vector *dest)
 		}
 	}
 }
-
-
