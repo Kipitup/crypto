@@ -6,7 +6,7 @@
 /*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/27 15:25:09 by amartino          #+#    #+#             */
-/*   Updated: 2020/04/01 17:49:08 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/04/01 18:32:34 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int8_t			vct_pop_from(t_vector *vector, size_t len, size_t index);
 **  	 JOIN	    **
 **********************
 */
-void			vct_copy(t_vector *src, t_vector *dest);
+void			vct_copy(t_vector *dest, t_vector *src);
 t_vector 		*vct_sub(t_vector *vector, size_t start, size_t len);
 t_vector		*vct_dup(t_vector *vector);
 t_vector		*vct_ndup(t_vector *vector, size_t len);
