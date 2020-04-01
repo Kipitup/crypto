@@ -2,21 +2,24 @@ from os import listdir
 from os.path import isfile, join
 from os import walk
 import os
+import random
 
 os.system("make")
 
-def execute(msg, key):
-    command_line = "./crypto \"" + msg + "\" \"" + key + "\""
-    print(command_line)
+def execute(msg, key, dest):
+    command_line = "./crypto \"" + msg + "\" \"" + key + "\"" + " 1>" + dest
+    #print("COMMAND: ", command_line)
     answer = os.system(command_line)
     return answer
 
-def diff(file_1, file_2):
+def diff(file_1, file_2, on):
     command_line = "diff " + file_1 + " " + file_2
-    print(command_line)
-    answer = os.system(command_line)
-    print(answer)
-    answer = os.system(command_line + " | wc -l")
+    print("COMMAND: ", command_line)
+    print("DIIF IS:")
+    if not on:
+        answer = os.system(command_line)
+    else:
+        answer = os.system(command_line + " | wc -c")
     return answer
 
 def read_file(path):
@@ -35,27 +38,34 @@ def get_list_of_files(path):
     list_of_files = []
     for (dirpath, dirnames, filenames) in walk(path):
         for file in filenames:
-            list_of_files.append(path + file)
+            list_of_files.append(file)
     return list_of_files
 
 
 directory = "./test/"
 path_to_tests = directory + "unit_test/"
-path_to_crypt = directory + "CRYPT/"
-path_to_uncrypt = directory + "UNCRYPT/"
+path_to_crypt = directory + "crypted/"
+path_to_uncrypt = directory + "uncrypted/"
 
 
-def test_me(dir, file_1, file_2):
-    res = execute(dir + file_1, dir + file_2)
-    #write_file
+def test_me(file_1, file_2):
+    file_3 = file_1 + "_" + file_2
+    #Crypt
+    res = execute(path_to_tests + file_1, read_file(path_to_tests + file_2), path_to_crypt + file_3)
+    diff(path_to_tests + file_1, path_to_crypt + file_3, 0)
+    
+    #Uncrypt
+    res = execute(path_to_crypt + file_3, read_file(path_to_tests + file_2), path_to_uncrypt + file_3)
+    diff(path_to_tests + file_1, path_to_uncrypt + file_3, 1)
 
 
 
 if __name__ == "__main__":
     list_of_tests = get_list_of_files(path_to_tests)
-    for test in list_of_tests:
-        res = execute(read_file(test), "test")
-        print(res)
+    for i in range(1):
+        uno = random.randint(0, len(list_of_tests) - 1)
+        dos = random.randint(0, len(list_of_tests) - 1)
+        test_me(list_of_tests[uno], list_of_tests[dos])
 
 
 #get directory
