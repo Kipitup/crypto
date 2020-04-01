@@ -23,28 +23,40 @@ t_vector	*ft_get_file(int fd)
 	return (file); 
 }
 
+uint8_t		get_state(char *str)
+{
+	t_vector	*str_state;
+	uint8_t		state;
+
+	(void)str_state;
+	(void)state;
+	str_state = vct_newstr(str);
+	if (vct_strequ(str_state, "CRYPT") == TRUE)
+		return (CRYPT);
+	else if (vct_strequ(str_state, "UNCRYPT") == TRUE)
+		return (UNCRYPT);
+	else
+		return (3);
+}
+
 int		main(int ac, char **av)
 {
 	t_crypt		*crypto;
-	t_vector	*file;
-	int			fd;
+	uint8_t		state;
 
-	if (ac > 2)
+	if (ac > 4)
 	{
-		crypto = init(av[1], av[2], &apply_key);
+		crypto = init(av[1], av[2], &apply_key, ft_atoi(av[3]));
 		if (crypto != NULL)
 		{
-			fd = open(av[1], O_RDWR, 744);
-			if (fd != FAILURE)
+			state = get_state(av[4]);
+			if (state == CRYPT || state == UNCRYPT)
 			{
-				file = ft_get_file(fd);
-				vct_del(&(crypto->msg));
-				crypto->msg = file;
+				crypto->cypher = feistel(crypto, state);
+				ft_printf("%s", crypto->cypher->str);
 			}
-			crypto->cypher = feistel(crypto, CRYPT);
-			crypto->msg = crypto->cypher;
-			crypto->cypher = feistel(crypto, UNCRYPT);
-			ft_printf("%s", crypto->cypher->str);
+			else
+				ft_printf("Wrong state.\nUsage: %s to_crypt key [CRYPT / UNCRYPT]\n", av[0]);
 		}
 		clean_feistel(&crypto);
 	}
