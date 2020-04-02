@@ -24,11 +24,19 @@ int		main(int ac, char **av)
 		if (crypto != NULL)
 		{
 			state = get_state(av[4]);
-			//if (state == CRYPT)
-			//	ft_dprintf(STD_ERR, "{c_red}%s{c_end}", crypto->msg->str);
+//			if (state == CRYPT)
+//				ft_dprintf(STD_ERR, "{c_green}%s{c_end}", crypto->msg->str);
+//			else if (state == UNCRYPT)
+//			{
+//				int fd = open("msg_uncrypt", O_RDWR | O_CREAT | O_TRUNC, 777);
+//				ft_dprintf(fd, "%s", crypto->msg->str);
+//				system("diff msg_uncrypt cypher");
+//			}
 			if (state == CRYPT || state == UNCRYPT)
 			{
 				crypto->cypher = feistel(crypto, state);
+		//		crypto->msg = crypto->cypher;
+		//		crypto->cypher = feistel(crypto, UNCRYPT);
 				ft_printf("%s", crypto->cypher->str);
 			}
 			else

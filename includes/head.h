@@ -3,7 +3,7 @@
 
 # include "libft.h"
 
-# define FEISTEL_CYCLES		5	
+//# define FEISTEL_CYCLES		5	
 # define MAX_LEN_PRINT		12
 # define CRYPT				0
 # define UNCRYPT			1
