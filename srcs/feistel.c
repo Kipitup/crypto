@@ -91,7 +91,10 @@ t_vector		*feistel(t_crypt *crypto, uint8_t state)
 			vct_del(&right);
 		}
 		cypher = vct_joinfree(&right, &left, BOTH);
-		//feistel_print_debug("Cypher", cypher);
+//		ft_dprintf(STD_ERR, "{c_red}len %zu\nsize %zu\n", cypher->len, cypher->size);
+//		write(2, cypher->str, cypher->len);
+//		ft_dprintf(STD_ERR, "{c_end}\n");
+//		feistel_print_debug("Cypher", cypher);
 		//ft_printf("{c_end}");
 
 	}
