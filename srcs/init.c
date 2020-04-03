@@ -22,6 +22,21 @@ t_vector	*ft_get_file(int fd)
 	return (file); 
 }
 
+int8_t		get_state(char *str)
+{
+	t_vector	*str_state;
+
+	str_state = vct_newstr(str);
+	if (str_state == NULL)
+		return (FAILURE);
+	if (vct_strequ(str_state, "CRYPT") == TRUE)
+		return (CRYPT);
+	else if (vct_strequ(str_state, "UNCRYPT") == TRUE)
+		return (UNCRYPT);
+	else
+		return (WRONG_STATE);
+}
+
 static void	get_message_and_key(t_crypt *crypto, char *msg, char *key)
 {
 	t_vector	*file;
@@ -32,6 +47,7 @@ static void	get_message_and_key(t_crypt *crypto, char *msg, char *key)
 	{
 		file = ft_get_file(fd);
 		crypto->msg = file;
+//		ft_dprintf(STD_ERR, "message: {c_green}[%zu] |%s|{c_end}\n", crypto->msg->len, crypto->msg->str);
 	}
 	else
 		crypto->msg = vct_newstr(msg);
@@ -40,12 +56,14 @@ static void	get_message_and_key(t_crypt *crypto, char *msg, char *key)
 	{
 		file = ft_get_file(fd);
 		crypto->key = file;
+//		ft_dprintf(STD_ERR, "key    : {c_yellow}[%zu] |%s|{c_end}\n", crypto->key->len, crypto->key->str);
 	}
 	else
 		crypto->key = vct_newstr(key);
 }
 
-t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func, size_t cycles)
+t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func, size_t cycles,
+		char *str_state)
 {
 	t_crypt		*crypto;
 
@@ -55,9 +73,10 @@ t_crypt		*init(char *msg, char *key, t_feistel_hash hash_func, size_t cycles)
 		get_message_and_key(crypto, msg, key);
 		crypto->hash = hash_func;
 		crypto->nb_cycles = cycles;
+		crypto->state = get_state(str_state);
 		if (vct_len(crypto->msg) % 2 == 1)
 			vct_addchar(crypto->msg, '\0');
-		if (crypto->msg == NULL || crypto->key == NULL)
+		if (crypto->msg == NULL || crypto->key == NULL || crypto->state == FAILURE)
 			clean_feistel(&crypto);
 	}
 	return (crypto);

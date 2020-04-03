@@ -6,10 +6,10 @@ void	vct_print_bin_nl(t_vector *vector)
 
 	if (vector != NULL && vector->str != NULL)
 	{
-		ft_dprintf(STD_ERR, "%d ", vector->len);
-		ft_dprintf(STD_ERR, "[");
+		ft_dprintf(STD_ERR, "[%zu] ", vector->len);
+		ft_dprintf(STD_ERR, "|");
 		write(2, vector->str, vector->len);
-		ft_dprintf(STD_ERR, "]");
+		ft_dprintf(STD_ERR, "|");
 		i = 0;
 //		if (vector->len < MAX_LEN_PRINT)
 //		{
@@ -33,6 +33,27 @@ void	feistel_print_debug(char *name, t_vector *vct)
 {
 	ft_dprintf(STD_ERR, "%-*s : ", MAX_LEN_PRINT, name);
 	vct_print_bin_nl(vct);
+}
+
+void	print_feistel_cycle(t_vector *sub_key, t_vector *hash_output,
+		t_vector *left, size_t i)
+{
+	ft_dprintf(STD_ERR, "{c_red} ---- CYCLE %zu ----{c_end}\n", i);
+
+	ft_dprintf(STD_ERR, "%-*s : ", MAX_LEN_PRINT, "0 Key");
+	ft_dprintf(STD_ERR, "{c_magenta}");
+	vct_print_bin_nl(sub_key);
+	ft_dprintf(STD_ERR, "{c_end}");
+	
+	ft_dprintf(STD_ERR, "%-*s : ", MAX_LEN_PRINT, "1 Right ^ Key = hash_output");
+	ft_dprintf(STD_ERR, "{c_magenta}");
+	vct_print_bin_nl(hash_output);
+	ft_dprintf(STD_ERR, "{c_end}");
+	
+	ft_dprintf(STD_ERR, "%-*s : ", MAX_LEN_PRINT, "2 Left ^ hash_output");
+	ft_dprintf(STD_ERR, "{c_magenta}");
+	vct_print_bin_nl(left);
+	ft_dprintf(STD_ERR, "{c_end}");
 }
 
 void	print_crypt(t_crypt *crypto)

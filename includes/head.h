@@ -7,6 +7,7 @@
 # define MAX_LEN_PRINT		12
 # define CRYPT				0
 # define UNCRYPT			1
+# define WRONG_STATE		2
 
 typedef void	(*t_feistel_hash)(t_vector *, t_vector *, t_vector *);
 
@@ -16,6 +17,7 @@ typedef struct 		s_crypt{
 	t_vector 		*cypher;
 	t_feistel_hash	hash;
 	size_t			nb_cycles;
+	int8_t			state;
 }					t_crypt;
 
 # include "auto_crypto.h"

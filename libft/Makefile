@@ -6,7 +6,7 @@
 #    By: fkante <fkante@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/19 17:11:38 by fkante            #+#    #+#              #
-#    Updated: 2020/04/01 17:50:15 by amartinod        ###   ########.fr        #
+#    Updated: 2020/04/03 11:59:29 by amartinod        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -214,6 +214,7 @@ SRCS += vct_split.c
 SRCS += vct_del_tab.c
 SRCS += vct_print_tab.c
 SRCS += vct_copy.c
+SRCS += vct_swap_ptr.c
 
 #----------------------------------- BTREE ------------------------------------#
 SRCS += heap_build.c
