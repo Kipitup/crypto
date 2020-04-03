@@ -2,7 +2,7 @@
 
 void	vct_print_bin_nl(t_vector *vector)
 {
-	size_t		i;
+//	size_t		i;
 
 	if (vector != NULL && vector->str != NULL)
 	{
@@ -10,7 +10,7 @@ void	vct_print_bin_nl(t_vector *vector)
 		ft_dprintf(STD_ERR, "|");
 		write(2, vector->str, vector->len);
 		ft_dprintf(STD_ERR, "|");
-		i = 0;
+//		i = 0;
 //		if (vector->len < MAX_LEN_PRINT)
 //		{
 //			while (i < MAX_LEN_PRINT - vector->len)

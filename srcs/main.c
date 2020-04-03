@@ -21,7 +21,7 @@ int		main(int ac, char **av)
 				vct_dprint(STD_OUT, crypto->cypher);
 			}
 			else
-				ft_printf("Usage: %s to_crypt key [CRYPT / UNCRYPT]\n", av[0]);
+				ft_printf("Usage: %s to_crypt key cycle [CRYPT / UNCRYPT]\n", av[0]);
 		}
 		clean_feistel(&crypto);
 	}

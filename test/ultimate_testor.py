@@ -4,16 +4,18 @@ from os import walk
 import os
 import random
 
-os.system("make")
 
-def execute(msg, key, dest):
-    command_line = "./crypto \"" + msg + "\" \"" + key + "\"" + " 1>" + dest
-    #print("COMMAND: ", command_line)
+def execute(msg, key, dest, cycles, crypt):
+    if crypt:
+        command_line = "./crypto " + msg + " " + key + " " + str(cycles) + " CRYPT" + " 1>" + dest
+    else:
+        command_line = "./crypto " + msg + " " + key + " " + str(cycles) + " UNCRYPT" + " 1>" + dest
+    print("COMMAND: ", command_line)
     answer = os.system(command_line)
     return answer
 
 def diff(file_1, file_2, on):
-    command_line = "diff " + file_1 + " " + file_2
+    command_line = "diff -a " + file_1 + " " + file_2
     print("COMMAND: ", command_line)
     print("DIIF IS:")
     if not on:
@@ -49,18 +51,24 @@ path_to_uncrypt = directory + "uncrypted/"
 
 
 def test_me(file_1, file_2):
+    cycles = 50
     file_3 = file_1 + "_" + file_2
     #Crypt
-    res = execute(path_to_tests + file_1, read_file(path_to_tests + file_2), path_to_crypt + file_3)
-    diff(path_to_tests + file_1, path_to_crypt + file_3, 0)
+    res = execute(path_to_tests + file_1, path_to_tests + file_2, path_to_crypt + file_3, cycles, 1)
+    diff(path_to_tests + file_1, path_to_crypt + file_3, 1)
     
     #Uncrypt
-    res = execute(path_to_crypt + file_3, read_file(path_to_tests + file_2), path_to_uncrypt + file_3)
-    diff(path_to_tests + file_1, path_to_uncrypt + file_3, 1)
+    res = execute(path_to_crypt + file_3, path_to_tests + file_2, path_to_uncrypt + file_3, cycles, 0)
+    diff(path_to_tests + file_1, path_to_uncrypt + file_3, 0)
 
 
 
 if __name__ == "__main__":
+    os.system("make")
+    os.system("rm -rf " + directory + path_to_crypt)
+    os.system("mkdir -p " + directory + path_to_crypt)
+    os.system("rm -rf " + directory + path_to_uncrypt)
+    os.system("mkdir -p " + directory + path_to_uncrypt)
     list_of_tests = get_list_of_files(path_to_tests)
     for i in range(1):
         uno = random.randint(0, len(list_of_tests) - 1)
