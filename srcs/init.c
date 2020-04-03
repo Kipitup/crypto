@@ -47,7 +47,9 @@ static void	get_message_and_key(t_crypt *crypto, char *msg, char *key)
 	{
 		file = ft_get_file(fd);
 		crypto->msg = file;
-//		ft_dprintf(STD_ERR, "message: {c_green}[%zu] |%s|{c_end}\n", crypto->msg->len, crypto->msg->str);
+	//	ft_dprintf(STD_ERR, "msg: {c_green}[%zu] |", crypto->msg->len);
+	//	vct_dprint(STD_ERR, crypto->msg);
+	//	ft_dprintf(STD_ERR, "|{c_end}\n");
 	}
 	else
 		crypto->msg = vct_newstr(msg);
@@ -56,7 +58,9 @@ static void	get_message_and_key(t_crypt *crypto, char *msg, char *key)
 	{
 		file = ft_get_file(fd);
 		crypto->key = file;
-//		ft_dprintf(STD_ERR, "key    : {c_yellow}[%zu] |%s|{c_end}\n", crypto->key->len, crypto->key->str);
+	//	ft_dprintf(STD_ERR, "key: {c_yellow}[%zu] |", crypto->key->len);
+	//	vct_dprint(STD_ERR, crypto->key);
+	//	ft_dprintf(STD_ERR, "|{c_end}\n");
 	}
 	else
 		crypto->key = vct_newstr(key);

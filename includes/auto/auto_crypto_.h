@@ -5,7 +5,7 @@ void		apply_key(t_vector *msg, t_vector *key, t_vector *dest);
 void		vct_print_bin_nl(t_vector *vector);
 void		feistel_print_debug(char *name, t_vector *vct);
 void		print_feistel_cycle(t_vector *sub_key, t_vector *hash_output,
-		t_vector *left, size_t i);
+		t_vector *left, size_t i, int8_t state);
 void		print_crypt(t_crypt *crypto);
 t_vector	*ft_get_file(int fd);
 int8_t		get_state(char *str);
