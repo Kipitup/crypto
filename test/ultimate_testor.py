@@ -11,13 +11,13 @@ def execute(msg, key, dest, cycles, crypt):
         command_line = "./crypto " + msg + " " + key + " " + str(cycles) + " CRYPT" + " 1>" + dest
     else:
         command_line = "./crypto " + msg + " " + key + " " + str(cycles) + " UNCRYPT" + " 1>" + dest
-    #print("COMMAND: ", command_line)
+    print(command_line)
     answer = os.system(command_line)
     return answer
 
 def diff(file_1, file_2, on):
     command_line = "diff -ay --color " + file_1 + " " + file_2
-    #print("COMMAND: ", command_line)
+    print(command_line)
     #print("DIIF IS:")
     if not on:
         answer = os.system(command_line)
