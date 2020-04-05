@@ -17,15 +17,17 @@ def execute(msg, key, dest, cycles, crypt):
     return answer
 
 def diff(file_1, file_2, on):
+    columns = shutil.get_terminal_size().columns
+    columns = columns - (columns // 5)
     if on:
-        command_line = "diff -ay --width=200 --color=always --suppress-common-lines " + file_1 + " " + file_2
+        command_line = "diff -ay --width=" + str(columns) + " --color=always --suppress-common-lines " + file_1 + " " + file_2
     else:
-        command_line = "diff -ay --width=200 --color=always " + file_1 + " " + file_2
+        command_line = "diff -ay --width=" + str(columns) + " --color=always " + file_1 + " " + file_2
     print(command_line)
-    print(RED, "\n", "~" * 200, RESET)
+    print(RED, "\n", "~" * columns, RESET)
     #print("DIIF IS:")
     answer = os.system(command_line)
-    print(RED, "\n", "~" * 200, RESET)
+    print(RED, "\n", "~" * columns, RESET)
     return answer
 
 def read_file(path):
