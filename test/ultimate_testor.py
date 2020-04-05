@@ -5,6 +5,7 @@ import os
 import time
 import random
 from color import *
+import shutil
 
 def execute(msg, key, dest, cycles, crypt):
     if crypt:
@@ -16,13 +17,15 @@ def execute(msg, key, dest, cycles, crypt):
     return answer
 
 def diff(file_1, file_2, on):
-    command_line = "diff -ay --color " + file_1 + " " + file_2
-    print(command_line)
-    #print("DIIF IS:")
-    if not on:
-        answer = os.system(command_line)
+    if on:
+        command_line = "diff -ay --width=200 --color=always --suppress-common-lines " + file_1 + " " + file_2
     else:
-        answer = os.system(command_line + " | wc -c")
+        command_line = "diff -ay --width=200 --color=always " + file_1 + " " + file_2
+    print(command_line)
+    print(RED, "\n", "~" * 200, RESET)
+    #print("DIIF IS:")
+    answer = os.system(command_line)
+    print(RED, "\n", "~" * 200, RESET)
     return answer
 
 def read_file(path):
@@ -92,7 +95,7 @@ class Testor():
         res = execute(self.cypher, self.key, self.uncrypted, self.cycles, 0)
         time_took = time.time() - start
         diff(self.msg, self.uncrypted, 0)
-        print(PURPLE, "\n Time to crypt    ", str(time_took)[0:5])
+        print(PURPLE, "\n Time to uncrypt  ", str(time_took)[0:5])
         print(          " Time for a cycle ", str((time_took) / self.cycles)[0:7], RESET)
         print("Need more details ? Feel free to copy next line")
         print("cat -e ", self.msg, " && ", "cat -e ", self.uncrypted)
@@ -100,18 +103,21 @@ class Testor():
 
 
     def display(self, crypt = 1):
+        columns = shutil.get_terminal_size().columns
+        n = columns // 4
         if crypt:
-            print(PURPLE, "=========CRYPT=========")
+            print(PURPLE, ("=" * n) + " " * 5 + "CRYPT" + " " * 5 + ("=" * n))
             print(RED,    "Message ", self.msg)
             print(YELLOW, "Key     ", self.key)
             print(BLUE,   "Cycles    ", self.cycles)
             print(GREEN,  "to file ", self.cypher, RESET)
         else:
-            print(PURPLE, "========UNCRYPT========")
+            print(PURPLE, ("=" * (n - 1))  + " " * 5 + "UNCRYPT"  + " " * 5 + ("=" * (n - 1)))
             print(RED,    "Message ", self.cypher)
             print(YELLOW, "Key     ", self.key)
             print(BLUE,   "Cycles    ", self.cycles)
             print(GREEN,  "to file ", self.uncrypted, RESET)
+        print("")
 
 def reset_folders():
     os.system("rm -rf " + path_to_crypt)
