@@ -1,5 +1,8 @@
 #include "head.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 t_vector	*ft_get_file(int fd)
 {
 	t_vector	*file;
@@ -40,6 +43,7 @@ int8_t		get_state(char *str)
 static void	get_message_and_key(t_crypt *crypto, char *msg, char *key)
 {
 	t_vector	*file;
+//	size_t		tmp;
 	int			fd;
 	
 	fd = open(msg, O_RDWR, 744);
@@ -47,9 +51,9 @@ static void	get_message_and_key(t_crypt *crypto, char *msg, char *key)
 	{
 		file = ft_get_file(fd);
 		crypto->msg = file;
-	//	ft_dprintf(STD_ERR, "msg: {c_green}[%zu] |", crypto->msg->len);
-	//	vct_dprint(STD_ERR, crypto->msg);
-	//	ft_dprintf(STD_ERR, "|{c_end}\n");
+//		ft_dprintf(STD_ERR, "msg: {c_yellow}[%zu] |", crypto->msg->len);
+//		tmp = vct_dprint(STD_ERR, crypto->msg);
+//		ft_dprintf(STD_ERR, "|{c_end}\n");
 	}
 	else
 		crypto->msg = vct_newstr(msg);
@@ -58,9 +62,6 @@ static void	get_message_and_key(t_crypt *crypto, char *msg, char *key)
 	{
 		file = ft_get_file(fd);
 		crypto->key = file;
-	//	ft_dprintf(STD_ERR, "key: {c_yellow}[%zu] |", crypto->key->len);
-	//	vct_dprint(STD_ERR, crypto->key);
-	//	ft_dprintf(STD_ERR, "|{c_end}\n");
 	}
 	else
 		crypto->key = vct_newstr(key);

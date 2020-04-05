@@ -6,7 +6,7 @@
 /*   By: fkante <fkante@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 12:58:24 by fkante            #+#    #+#             */
-/*   Updated: 2020/04/02 17:00:58 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/04/05 15:57:44 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define TRUE					1
 # define FAILURE				-1
 # define SUCCESS				0
-# define BUFF_SIZE				10
+# define BUFF_SIZE				1024	
 # define FD_LIMIT				4864
 # define CLEANUP				-42
 # define STD_IN					STDIN_FILENO

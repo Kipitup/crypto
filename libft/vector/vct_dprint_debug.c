@@ -6,7 +6,7 @@
 /*   By: amartinod <a.martino@sutdent.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 17:45:30 by amartinod         #+#    #+#             */
-/*   Updated: 2020/04/03 17:57:31 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/04/04 20:01:18 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ ssize_t		vct_dprint_debug(int fd, t_vector *vector)
 	ret = FAILURE;
 	if (fd >= 0 && vector != NULL && vector->str != NULL)
 	{
-		ft_dprintf(fd, "{c_green}len [%d]{c_end}\n|->", vector->len);
+		ft_dprintf(fd, "{c_green}len [%d]\n|->{c_end}", vector->len);
 		ret = write(fd, vector->str, vector->len);
 		ft_dprintf(fd, "{c_green}<-|{c_end}\n");
 	}

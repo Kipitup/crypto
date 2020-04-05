@@ -81,20 +81,14 @@ t_vector		*feistel(t_crypt *crypto)
 			vct_del(&right);
 		}
 		cypher = vct_joinfree(&right, &left, BOTH);
+//		ft_dprintf(STD_ERR, "{c_cyan}");
+//		ft_dprintf(STD_ERR, "len  %zu\nsize %zu\n", cypher->len, cypher->size);
+//		write(2, cypher->str, cypher->len);
+//		ft_dprintf(STD_ERR, "{c_end}\n");
 	}
 	vct_del(&hash_output);
 	vct_del(&sub_key);
 	return (cypher);
 }
 
-
-//		if (crypto->state == CRYPT)
-//			ft_dprintf(STD_ERR, "{c_blue}");
-//		else
-//			ft_dprintf(STD_ERR, "{c_cyan}");
-//		ft_dprintf(STD_ERR, "len  %zu\nsize %zu\n", cypher->len, cypher->size);
-//		write(2, cypher->str, cypher->len);
-//		ft_dprintf(STD_ERR, "{c_end}\n");
-//		feistel_print_debug("Cypher", cypher);
-		//ft_dprintf(STD_ERR, "{c_end}");
 
