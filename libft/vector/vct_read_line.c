@@ -6,7 +6,7 @@
 /*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 15:08:41 by amartino          #+#    #+#             */
-/*   Updated: 2020/04/05 17:13:43 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/04/07 10:20:27 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int8_t	parse_line(t_vector *vector, t_vector **line, uint8_t the_end)
 	if (index >= 0)
 	{
 		ret = TRUE;
-		*line = vct_sub(vector, START, (size_t)index + 1);//new
+		*line = vct_sub(vector, START, (size_t)index);
 		if (*line == NULL)
 			ret = FAILURE;
 		if (vct_pop_from(vector, ((size_t)index + 1), START) == FAILURE)

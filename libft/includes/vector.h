@@ -6,7 +6,7 @@
 /*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/27 15:25:09 by amartino          #+#    #+#             */
-/*   Updated: 2020/04/03 17:49:51 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/04/07 10:32:03 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,19 +75,8 @@ t_vector		*vct_newstr(char *str);
 size_t			vct_len(t_vector *vector);
 int8_t			vct_increase_scale(t_vector *vector, size_t scale);
 void			vct_bzero(t_vector *vector);
-void			vct_del(t_vector **vector);
-void			vct_del_tab(t_vector ***vct_tab);
-void			vct_del_tab_content(t_vector **vct_tab);
 char			*vct_getstr(t_vector *vector);
 char			vct_getchar_at(t_vector *vector, size_t index);
-ssize_t			vct_print(t_vector *vector);
-ssize_t			vct_dprint(int fd, t_vector *vector);
-ssize_t			vct_dprint_debug(int fd, t_vector *vector);
-ssize_t			vct_print_nl(t_vector *vector);
-void			vct_print_tab(t_vector **vector);
-int8_t			vct_read_line(const int fd, t_vector **line);
-int8_t			vct_read_line_for_push_swap(const int fd, t_vector **line);
-t_vector		**vct_split(t_vector *input, char c);
 void			vct_swap_ptr(t_vector **left, t_vector **right);
 
 /*
@@ -148,6 +137,27 @@ ssize_t			vct_chr_str(t_vector *vector, char *find);
 size_t			vct_chr_str_count(t_vector *vector, char *find);
 ssize_t			vct_replace_char(t_vector *vector, char c, char replace);
 ssize_t			vct_replace_str(t_vector *vector, char *str, char *replace);
+t_vector		**vct_split(t_vector *input, char c);
+
+/*
+**********************
+**  	 FILE	    **
+**********************
+*/
+int8_t			vct_read_line(const int fd, t_vector **line);
+t_vector		*vct_get_file(int fd);
+int8_t			vct_read_line_for_push_swap(const int fd, t_vector **line);
+
+/*
+**********************
+**  	PRINT	    **
+**********************
+*/
+ssize_t			vct_print(t_vector *vector);
+ssize_t			vct_dprint(int fd, t_vector *vector);
+ssize_t			vct_dprint_debug(int fd, t_vector *vector);
+ssize_t			vct_print_nl(t_vector *vector);
+void			vct_print_tab(t_vector **vector);
 
 /*
 **********************
@@ -158,6 +168,15 @@ int				vct_apply(t_vector *vector, enum e_apply type);
 
 /*
 **********************
+**  	CLEAN	 	**
+**********************
+*/
+void			vct_del(t_vector **vector);
+void			vct_del_tab(t_vector ***vct_tab);
+void			vct_del_tab_content(t_vector **vct_tab);
+
+/*
+**********************
 **  	CONV	    **
 **********************
 */
@@ -165,11 +184,8 @@ t_vector		*ft_ftoa(double value, uint64_t precision, uint32_t option);
 t_vector		*ft_fldtoa(long double val, uint64_t preci, uint32_t opt);
 
 /*
-** vct_print
 ** vct_trim
-** vct_split
 ** vct_splitchr
-** vct_read_line
 */
 
 # include "libft.h"
