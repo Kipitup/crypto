@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/22 19:02:24 by ldevelle          #+#    #+#              #
-#    Updated: 2020/02/29 18:26:48 by ldevelle         ###   ########.fr        #
+#    Updated: 2020/04/12 12:08:05 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,27 +31,30 @@
 # $4 is Project name, fore recursive Makegenius compatibility
 
 path=includes/auto/
-prefix=auto_
-yy=_
-suffix=_H
-extension=.h
-name=$path$prefix$4$yy$1$extension
-spe=$prefix$4$yy$1$suffix
+prefix=auto
+delim=_
+extension_header=_H
+extension_file=.h
+
+common=$prefix$delim$4$delim$1
+
+name=$path$common$extension_file
+head=$common$extension_header
 
 mkdir -p $path
 # rm -rf $name
 
 if [ "$(uname)" == "Darwin" ]; then
 	echo "#ifndef \c" > $name
-	printf $spe | awk '{ print toupper($1) }' >> $name
+	printf $head | awk '{ print toupper($1) }' >> $name
 	echo "# define \c" >> $name
-	printf $spe | awk '{ print toupper($1) }' >> $name
+	printf $head | awk '{ print toupper($1) }' >> $name
 	echo "" >> $name
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 	echo -n "#ifndef " > $name
-	printf $spe | awk '{ print toupper($1) }' >> $name
+	printf $head | awk '{ print toupper($1) }' >> $name
 	echo -n "# define " >> $name
-	printf $spe | awk '{ print toupper($1) }' >> $name
+	printf $head | awk '{ print toupper($1) }' >> $name
 	echo "" >> $name
 fi
 

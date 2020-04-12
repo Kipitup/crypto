@@ -1,12 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   auto_crypto.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ezalos <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/04/12 14:01:59 by ezalos            #+#    #+#             */
+/*   Updated: 2020/04/12 14:01:59 by ezalos           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef AUTO_CRYPTO_H
 # define AUTO_CRYPTO_H
 
 # include "auto/auto_crypto_.h"
-# include "auto/auto__parse.h"
-# include "auto/auto__feistel.h"
-# include "auto/auto__clean.h"
-# include "auto/auto__tool.h"
-# include "auto/auto__print.h"
-# include "auto/auto__main_test.h"
 
 #endif
