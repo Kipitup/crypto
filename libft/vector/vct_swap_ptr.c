@@ -1,18 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   auto_crypto.h                                      :+:      :+:    :+:   */
+/*   vct_swap_ptr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezalos <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: amartinod <a.martino@sutdent.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/04/12 14:01:59 by ezalos            #+#    #+#             */
-/*   Updated: 2020/04/12 14:01:59 by ezalos           ###   ########.fr       */
+/*   Created: 2020/04/03 11:56:22 by amartinod         #+#    #+#             */
+/*   Updated: 2020/04/03 11:58:44 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AUTO_CRYPTO_H
-# define AUTO_CRYPTO_H
+#include "vector.h"
 
-# include "auto/auto_crypto_.h"
+/*
+**	Swap both pointer content.
+*/
 
-#endif
+void		vct_swap_ptr(t_vector **left, t_vector **right)
+{
+	t_vector *tmp;
+
+	tmp = *right;
+	*right = *left;
+	*left = tmp;
+}

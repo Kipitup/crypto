@@ -6,7 +6,7 @@
 #    By: ldevelle <ldevelle@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/12 15:04:16 by ldevelle          #+#    #+#              #
-#    Updated: 2020/03/29 15:27:49 by ezalos           ###   ########.fr        #
+#    Updated: 2020/04/12 13:58:06 by ezalos           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ MASTER		= 	srcs/
 
 $(shell mkdir -p $(MASTER))
 
-AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
+#AUTO_HEAD	=	$(MAIN_FOLD:%=auto/auto_%.h)
+AUTO_HEAD	=	auto_$(NAME).h
 
 HEAD		=	$(HEADERS:%=$(HEAD_DIR)%)
 
@@ -40,9 +41,6 @@ PAT =
 
 $(shell mkdir -p $(mk) $(mk_p))
 $(shell touch $(include_dep))
-FETCH_MODULES	=	$(shell grep "url" .gitmodules | cut -d '=' -f 2)
-UNAME			:=	$(shell uname)
-GIT_MODULES 	= $(FETCH_MODULES:%=git clone % ; )
 
 include $(include_dep)
 
@@ -52,20 +50,12 @@ OBJS	= $(PAT:$(MASTER)%.c=$(DIR_OBJ)%.o)
 ARG 	?= ldevelle
 MSG		?= "Automated commit message!"
 
-##########################
-##						##
-##	   SRCS/PROTOS		##
-##						##
-##########################
 
-ifeq ($(UNAME),Linux)
-update_head	=	bash .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
-update_dep	=	bash .makegenius/scripts/get_mk_srcs.sh '' $(MASTER) '' '-depth 1';
-else
-update_head	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_protos.sh % $(MASTER);)
-update_head	+=	sh .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
-update_dep	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_mk_srcs.sh % $(MASTER);)
-update_dep	+=	sh .makegenius/scripts/get_mk_srcs.sh '' $(MASTER) '' '-d 1';
+SUPPORTED_COMMANDS := run
+SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
+ifneq "$(SUPPORTS_MAKE_ARGS)" ""
+  COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(COMMAND_ARGS):;@:)
 endif
 
 ##########################
@@ -106,6 +96,9 @@ endif
 ##		 COLORS			##
 ##						##
 ##########################
+
+UNAME			:=	$(shell uname)
+
 ifeq ($(UNAME),Linux)
 RED     	= \e[31m
 GREEN   	= \e[32m
@@ -178,15 +171,15 @@ all :	$(modules) $(NAME) auteur $(DIR_OBJ)
 
 ifeq ($(LIB_PRJCT),y)
 $(NAME):	$(OBJS) $(HEAD_DIR)
-	$(call run_and_test, $(AR) $(NAME) $(OBJS))
+	@$(call run_and_test, $(AR) $(NAME) $(OBJS))
 else
 $(NAME):	$(LIB) $(OBJS) $(HEAD_DIR)
-	$(call run_and_test, $(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIB) $(HEADERS_DIRECTORIES))
+	@$(call run_and_test, $(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIB) $(HEADERS_DIRECTORIES))
 endif
 
 $(DIR_OBJ)%.o:$(MASTER)%.c $(HEAD) Makefile
-	mkdir -p $(DIR_OBJ)
-	$(call run_and_test, $(CC) $(CFLAGS) $(HEADERS_DIRECTORIES) -o $@ -c $<)
+	@mkdir -p $(DIR_OBJ)
+	@$(call run_and_test, $(CC) $(CFLAGS) $(HEADERS_DIRECTORIES) -o $@ -c $<)
 
 $(LIB): FORCE
 		$(MAKE) -C $(LIB_DIR)
@@ -224,7 +217,8 @@ t	:	all
 		$(VALGRIND) ./$(TESTEUR) "$(ARG)"
 
 run	:	all
-		$(VALGRIND) ./$(NAME) "$(ARG)"
+		$(VALGRIND) ./$(NAME) $(COMMAND_ARGS)
+		@echo ""
 
 unit_test :
 
@@ -241,6 +235,9 @@ true
 ##		  GIT			##
 ##						##
 ##########################
+
+FETCH_MODULES	=	$(shell grep "url" .gitmodules | cut -d '=' -f 2)
+GIT_MODULES 	= $(FETCH_MODULES:%=git clone % ; )
 
 init:
 		sh ./.makegenius/scripts/init_makegenius.sh
@@ -275,6 +272,16 @@ modules :
 ##	    AUTOMATE		##
 ##						##
 ##########################
+
+ifeq ($(UNAME),Linux)
+update_head	=	bash .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
+update_dep	=	bash .makegenius/scripts/get_mk_srcs.sh '' $(MASTER) '' '-depth 1';
+else
+#update_head	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_protos.sh % $(MASTER);)
+update_head	=	bash .makegenius/scripts/get_protos.sh '' $(MASTER) '' $(NAME);
+#update_dep	=	$(MAIN_FOLD:%=sh .makegenius/scripts/get_mk_srcs.sh % $(MASTER);)
+update_dep	=	bash .makegenius/scripts/get_mk_srcs.sh '' $(MASTER) '' '-d 1';
+endif
 
 file : 	sources prototypes
 		$(MAKE)
@@ -328,4 +335,6 @@ FORCE:
 .PHONY	:	all clean fclean re git file object_ready check update\
 			rm_update_tmp_dir auto_dir prototypes sources modules\
 			rere auteur run unit_test big init init_git FORCE
-.SILENT	:
+.SILENT	:	all clean fclean re git file object_ready check update\
+			rm_update_tmp_dir auto_dir prototypes sources modules\
+			rere auteur unit_test big init init_git FORCE

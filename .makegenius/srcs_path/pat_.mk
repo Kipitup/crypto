@@ -1,7 +1,10 @@
-PAT += 	srcs/clean.c \
-	srcs/print.c \
-	srcs/seed.c \
-	srcs/feistel.c \
+PAT += 	srcs/seed.c \
 	srcs/hash_func.c \
-	srcs/init.c \
-	srcs/main.c 
+	srcs/bitwise_operation.c \
+	srcs/print_feistel.c \
+	srcs/parse.c \
+	srcs/main.c \
+	srcs/key_expansion.c \
+	srcs/init/init_feistel.c \
+	srcs/feistel.c \
+	srcs/clean_feistel.c 

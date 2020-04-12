@@ -6,7 +6,7 @@
 #    By: fkante <fkante@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/19 17:11:38 by fkante            #+#    #+#              #
-#    Updated: 2020/04/01 17:50:15 by amartinod        ###   ########.fr        #
+#    Updated: 2020/04/07 09:50:28 by amartinod        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -201,6 +201,8 @@ SRCS += vct_chr.c
 SRCS += vct_chr_str.c
 SRCS += vct_getchar_at.c
 SRCS += vct_print.c
+SRCS += vct_dprint.c
+SRCS += vct_dprint_debug.c
 SRCS += vct_print_nl.c
 SRCS += vct_addnb.c
 SRCS += vct_chr_count.c
@@ -214,6 +216,8 @@ SRCS += vct_split.c
 SRCS += vct_del_tab.c
 SRCS += vct_print_tab.c
 SRCS += vct_copy.c
+SRCS += vct_swap_ptr.c
+SRCS += vct_get_file.c
 
 #----------------------------------- BTREE ------------------------------------#
 SRCS += heap_build.c

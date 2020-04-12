@@ -6,18 +6,22 @@
 /*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 15:00:45 by amartino          #+#    #+#             */
-/*   Updated: 2020/02/25 20:47:32 by amartino         ###   ########.fr       */
+/*   Updated: 2020/04/03 17:44:26 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
 
 /*
-**	Print the vector and a new line
+**	Print the vector. Return the number of byte written or FAILURE if an error
+**	occur.
 */
-
-void	vct_print(t_vector *vector)
+ssize_t		vct_print(t_vector *vector)
 {
+	ssize_t		ret;
+
+	ret = FAILURE;
 	if (vector != NULL && vector->str != NULL)
-		write(1, vector->str, vector->len);
+		ret = write(1, vector->str, vector->len);
+	return (ret);
 }

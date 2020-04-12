@@ -6,7 +6,7 @@
 /*   By: amartino <amartino@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/05 15:57:53 by amartino          #+#    #+#             */
-/*   Updated: 2020/02/10 20:38:02 by amartinod        ###   ########.fr       */
+/*   Updated: 2020/04/05 17:10:35 by amartinod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_vector 	*vct_sub(t_vector *vector, size_t start, size_t len)
 	new_vector = vct_new(len + 1);
 	if (new_vector != NULL)
 	{
-		ft_strncpy(new_vector->str, (vector->str + start), len);
+		ft_memcpy(new_vector->str, (vector->str + start), len);
 		new_vector->len = len;
 	}
 	return (new_vector);
