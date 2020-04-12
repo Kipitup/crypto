@@ -16,13 +16,13 @@ def execute(msg, key, dest, cycles, crypt):
     answer = os.system(command_line)
     return answer
 
-def diff(file_1, file_2, on):
+def diff(file_key, file_msg, on):
     columns = shutil.get_terminal_size().columns
     columns = columns - (columns // 5)
     if on:
-        command_line = "diff -ay --width=" + str(columns) + " --color=always --suppress-common-lines " + file_1 + " " + file_2
+        command_line = "diff -ay --width=" + str(columns) + " --color=always --suppress-common-lines " + file_key + " " + file_msg
     else:
-        command_line = "diff -ay --width=" + str(columns) + " --color=always " + file_1 + " " + file_2
+        command_line = "diff -ay --width=" + str(columns) + " --color=always " + file_key + " " + file_msg
     print(command_line)
     print(RED, "\n", "~" * columns, RESET)
     #print("DIIF IS:")
@@ -54,20 +54,51 @@ path_to_uncrypt = directory + "uncrypted/"
 class Testor():
     def __init__(self):
         self.max_len = -1
+        self.select = "ALL_COMBINAISONS"
         self.get_list_of_files()
+        self.tests_to_do = (len(self.list_of_files) * len(self.list_of_files)) - 1 
+
+    def make_file_path(self, add_folders=True):
+        if add_folders:
+            self.file_crypto = self.file_key + "_" + self.file_msg
+            self.msg = path_to_tests + self.file_msg
+            self.key = path_to_tests + self.file_key
+            self.cypher = path_to_crypt + self.file_crypto
+            self.uncrypted = path_to_uncrypt + self.file_crypto
+        else:
+            self.file_crypto = self.file_key + "_" + self.file_msg
+            self.msg = self.file_msg
+            self.key = self.file_key
+            self.cypher = self.file_crypto
+            self.uncrypted = self.file_crypto
 
     def new_test(self):
         self.select_msg_and_key()
         self.cycles = random.randint(0, 500)
-        self.file_3 = self.file_1 + "_" + self.file_2
-        self.msg = path_to_tests + self.file_1
-        self.key = path_to_tests + self.file_2
-        self.cypher = path_to_crypt + self.file_3
-        self.uncrypted = path_to_uncrypt + self.file_3
 
+    def next_file_combinaison(self):
+        self.file_msg = self.list_of_files[self.tests_to_do // len(self.list_of_files)]
+        self.file_key = self.list_of_files[self.tests_to_do % len(self.list_of_files)]
+        print(self.file_key)
+        print(self.file_msg)
+        
     def select_msg_and_key(self):
-        self.file_1 = self.list_of_files[random.randint(0, len(self.list_of_files) - 1)]
-        self.file_2 = self.list_of_files[random.randint(0, len(self.list_of_files) - 1)]
+        if self.select == "ALL_COMBINAISONS":
+            self.next_file_combinaison()
+            print(self.file_key)
+            print(self.file_msg)
+            self.make_file_path(add_folders=True)
+        elif self.selct == "RANDOM":
+            len_rand = len(self.list_of_files) - 1
+            choice = lambda x : random.randint(0, x)
+            self.file_key = self.list_of_files[choice(len_rand)]
+            self.file_msg = self.list_of_files[choice(len_rand)]
+            self.make_file_path(add_folders=True)
+        elif self.selct == "USER_FILES":
+            self.msg = "msg"
+            self.key = "key"
+            self.make_file_path(add_folders=False)
+            
 
     def get_list_of_files(self):
         self.list_of_files = []
@@ -79,6 +110,11 @@ class Testor():
         self.max_len = (self.max_len * 2) + 1 + len(path_to_uncrypt)
 
     def test_me(self):
+        columns = shutil.get_terminal_size().columns
+        print("#" * columns)
+        print("#" * columns)
+        print("#" * columns)
+        print("Test n*", self.tests_to_do)
         #Crypt
         self.display(1)
         start = time.time()
@@ -102,6 +138,7 @@ class Testor():
         print("Need more details ? Feel free to copy next line")
         print("cat -e ", self.msg, " && ", "cat -e ", self.uncrypted)
         print("\n\n\n")
+        self.tests_to_do -= 1
 
 
     def display(self, crypt = 1):
@@ -134,7 +171,7 @@ def reset_folders():
 if __name__ == "__main__":
     reset_folders()
     testor = Testor()
-    for i in range(1):
+    while testor.tests_to_do:
         testor.new_test()
         testor.test_me()
 
