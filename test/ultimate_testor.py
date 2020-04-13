@@ -125,7 +125,7 @@ class Testor():
 
     def test_crypt(self):
         self.cry_sim = self.similarity_test(self.msg, self.cypher)
-        if self.cry_sim > 0.75:
+        if self.cry_sim >= 1:
             self.correct_crypt = True
         else:
             self.correct_crypt = False
