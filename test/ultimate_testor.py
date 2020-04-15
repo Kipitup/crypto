@@ -63,6 +63,8 @@ class Testor():
         self.path_to_tests = self.directory + "unit_test"
         self.path_to_crypt = self.directory + "crypted/"
         self.path_to_uncrypt = self.directory + "uncrypted/"
+        self.temp_file = self.directory + "tmp_diff"
+        self.temp_file_2 = self.directory + "tmp_diff_2"
         self.fsanitize = False
         self.tests_done = 0
         self.parser()
@@ -157,11 +159,10 @@ class Testor():
         self.max_len = (self.max_len * 2) + 1 + len(self.path_to_uncrypt)
 
     def similarity_test(self, file_1, file_2, crypt=True):
-        temp_file = "./test/tmp_diff"
         grep_out = " | grep -av \"\\ No newline at end of file\""
-        command_line = "diff -a --suppress-common-lines " + file_1 + " " + file_2 + " " + grep_out + " > " + temp_file
+        command_line = "diff -a --suppress-common-lines " + file_1 + " " + file_2 + " " + grep_out + " > " + self.temp_file
         os.system(command_line)
-        len_diff = len(read_file(temp_file))
+        len_diff = len(read_file(self.temp_file))
         len_1 = len(read_file(file_1))
         len_2 = len(read_file(file_2))
         if crypt:
@@ -190,11 +191,74 @@ class Testor():
         else:
             self.correct_decrypt = False
 
+    def select_a_file(self, files):
+        for i in range(len(files)):
+            print(i, " -> ", files[i][1], RESET, files[i][0])
+        while True:
+            num = input()
+            try:
+                num = int(num)
+                if num >= 0 and num < len(files):
+                    return files[num][0]
+                else:
+                    print("Choice must be between 0 and ", len(files) - 1, "\nYours is ", num)
+            except:
+                print("Please choose a number")
+                num = None
+
+    def diff_hexdump(self, file_1, file_2):
+        cmd = "hexdump -C " + file_1 + " > " + self.temp_file
+        cmd_1 = "hexdump -C " + file_2 + " > " + self.temp_file_2
+        print(cmd)
+        print(cmd_1)
+        os.system(cmd)
+        os.system(cmd_1)
+        diff(self.temp_file, self.temp_file_2, 0)
+
     def investigate(self):
-        diff(self.msg, self.cypher, 0)
-        self.display_time(crypt=True)
-        diff(self.msg, self.uncrypted, 0)
-        self.display_time(crypt=False)
+        files = [[self.msg, RED +         "Plaintext "],
+                 [self.key, YELLOW +      "Key       "],
+                 [self.cypher, PURPLE +   "Crypted   "],
+                 [self.uncrypted, BLUE +  "Uncrypted "]]
+        while True:
+            mode = "?"
+            print("Would you like to :")
+            print("\t" + BOLD + UNDERLINE + RED + "c" + RESET + "at a file") 
+            print("\t" + BOLD + UNDERLINE + RED + "h" + RESET + "exdump a file ?")
+            print("\t" + BOLD + UNDERLINE + RED + "d" + RESET + "iff 2 files ?")
+            print("\t" + BOLD + UNDERLINE + RED + "s" + RESET + "how testor data ?")
+            print("\t" + BOLD + UNDERLINE + RED + "l" + RESET + "uigi diff (obviously the best) ?")
+            print("\tPress " + BOLD + UNDERLINE + RED + "Enter" + RESET + " to exit")
+            mode = input()
+            if mode == "":
+                break
+            elif mode == "h":
+                file_1 = self.select_a_file(files)
+                cmd = "hexdump -C " + file_1
+                print(cmd)
+                os.system(cmd)
+            elif mode == "c":
+                file_1 = self.select_a_file(files)
+                cmd = "cat " + file_1
+                print(cmd)
+                os.system(cmd)
+            elif mode == "l":
+                print("Please choose first  file for diff")
+                file_1 = self.select_a_file(files)
+                print("Please choose second file for diff")
+                file_2 = self.select_a_file(files)
+                self.diff_hexdump(file_1, file_2)
+            elif mode == "d":
+                print("Please choose first  file for diff")
+                file_1 = self.select_a_file(files)
+                print("Please choose second file for diff")
+                file_2 = self.select_a_file(files)
+                diff(file_1, file_2, 0)
+            elif mode == "s":
+                self.display(crypt=True)
+                self.display(crypt=False)
+            else:
+                print("I don't understand: ", mode)
 
     def one_round(self):
         self.new_test()
