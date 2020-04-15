@@ -7,6 +7,9 @@ import random
 from color import *
 import shutil
 
+import argparse
+
+
 def execute(msg, key, dest, cycles, crypt=True):
     start = time.time()
     if crypt:
@@ -49,41 +52,86 @@ def write_file(path, content):
 
 
 
-directory = "./test/"
-path_to_tests = directory + "unit_test/"
-path_to_crypt = directory + "crypted/"
-path_to_uncrypt = directory + "uncrypted/"
 
 
 
 class Testor():
     def __init__(self):
         self.max_len = -1
-        self.select = "ALL_COMBINAISONS"
-        self.get_list_of_files()
-        self.tests_to_do = (len(self.list_of_files) * len(self.list_of_files)) - 1 
+        self.cycles_user = None
+        self.directory = os.sys.argv[0][0:-len("ultimate_testor.py")]
+        self.path_to_tests = self.directory + "unit_test"
+        self.path_to_crypt = self.directory + "crypted/"
+        self.path_to_uncrypt = self.directory + "uncrypted/"
+        self.fsanitize = False
+        self.tests_done = 0
+        self.parser()
+        self.reset_folders()
+        
+    def parser(self):
+        parser = argparse.ArgumentParser(
+                    description='Process arguments for testor of cypher C library')
+        parser.add_argument("-p", "--project", type=str, default="Feistel",
+                    help="Choose which crypto to test")
+        parser.add_argument("-v", "--verbosity", type=int, default=3,
+                    help="increase output verbosity [0-3]")
+        parser.add_argument("-r", "--random", type=int, default=None,
+                    help="number of random test")
+        parser.add_argument("-f", "--user_files", type=str, nargs=2,
+                    help="user specified msg and key")
+        parser.add_argument("-o", "--folder", type=str,
+                    help="user specified unit_test folder")
+        parser.add_argument("-c", "--cycles", type=int,
+                    help="nb of feistel cycles (default random)")
+        parser.add_argument("-s", "--stop", action='store_true',
+                    help="stop after each test")
+        parser.add_argument("-fs", "--fsanitize", action='store_true',
+                    help="remake libft and crypto with fsanitize on")
+        args = parser.parse_args()
+        
+        if args.folder:
+            self.path_to_tests = args.folder
+        
+        if args.random:
+            self.select = "RANDOM"
+            self.tests_to_do = args.random
+        elif args.user_files:
+            self.select = "USER_FILES"
+            self.file_msg = args.user_files[0]
+            self.file_key = args.user_files[1]
+            self.tests_to_do = 1
+        else:
+            self.select = "ALL_COMBINAISONS"
+            self.get_list_of_files()
+            self.tests_to_do = (len(self.list_of_files) * len(self.list_of_files)) - 1
+        self.verbosity = args.verbosity
+        if args.cycles:
+            self.cycles_user = args.cycles
+        if args.fsanitize:
+            self.fsanitize = True
+        if args.stop:
+            self.stop = True
+        else:
+            self.stop = False
+        #args.verbosity
 
     def make_file_path(self, add_folders=True):
-        if add_folders:
-            self.file_crypto = self.file_msg + "_" + self.file_key
-            self.msg = path_to_tests + self.file_msg
-            self.key = path_to_tests + self.file_key
-            self.cypher = path_to_crypt + self.file_crypto
-            self.uncrypted = path_to_uncrypt + self.file_crypto
-        else:
-            self.file_crypto = self.file_msg + "_" + self.file_key
-            self.msg = self.file_msg
-            self.key = self.file_key
-            self.cypher = self.file_crypto
-            self.uncrypted = self.file_crypto
+        self.file_crypto = self.file_msg.split("/")[-1] + "_" + self.file_key.split("/")[-1]
+        self.msg = self.file_msg
+        self.key = self.file_key
+        self.cypher = self.path_to_crypt + self.file_crypto
+        self.uncrypted = self.path_to_uncrypt + self.file_crypto
 
     def new_test(self):
         self.select_msg_and_key()
-        self.cycles = random.randint(0, 300)
+        if self.cycles_user != None:
+            self.cycles = self.cycles_user
+        else:
+            self.cycles = random.randint(0, 30)
 
     def next_file_combinaison(self):
-        self.file_msg = self.list_of_files[self.tests_to_do // len(self.list_of_files)]
-        self.file_key = self.list_of_files[self.tests_to_do % len(self.list_of_files)]
+        self.file_msg = self.list_of_files[self.tests_done // len(self.list_of_files)]
+        self.file_key = self.list_of_files[self.tests_done % len(self.list_of_files)]
         
     def select_msg_and_key(self):
         if self.select == "ALL_COMBINAISONS":
@@ -91,48 +139,52 @@ class Testor():
             self.make_file_path(add_folders=True)
         elif self.select == "RANDOM":
             len_rand = len(self.list_of_files) - 1
-            choice = lambda x : random.randint(0, x)
+            choice = lambda x : random.randint(1, x)
             self.file_key = self.list_of_files[choice(len_rand)]
             self.file_msg = self.list_of_files[choice(len_rand)]
             self.make_file_path(add_folders=True)
         elif self.select == "USER_FILES":
-            self.msg = "msg"
-            self.key = "key"
             self.make_file_path(add_folders=False)
 
     def get_list_of_files(self):
         self.list_of_files = []
-        for (dirpath, dirnames, filenames) in walk(path_to_tests):
+        for (dirpath, dirnames, filenames) in walk(self.path_to_tests):
             for file in filenames:
                 if self.max_len < len(file):
                     self.max_len = len(file)
-                self.list_of_files.append(file)
-        self.max_len = (self.max_len * 2) + 1 + len(path_to_uncrypt)
+                new_entry = dirpath + "/" + file
+                self.list_of_files.append(new_entry)
+        self.max_len = (self.max_len * 2) + 1 + len(self.path_to_uncrypt)
 
-    def similarity_test(self, file_1, file_2):
+    def similarity_test(self, file_1, file_2, crypt=True):
         temp_file = "./test/tmp_diff"
         grep_out = " | grep -av \"\\ No newline at end of file\""
         command_line = "diff -a --suppress-common-lines " + file_1 + " " + file_2 + " " + grep_out + " > " + temp_file
         os.system(command_line)
         len_diff = len(read_file(temp_file))
         len_1 = len(read_file(file_1))
-        self.len_in = len_1
         len_2 = len(read_file(file_2))
-        self.len_out = len_2
-        self.len_diff = len_diff
+        if crypt:
+            self.len_in_cry = len_1
+            self.len_out_cry = len_2
+            self.len_diff_cry = len_diff
+        else:
+            self.len_in_decry = len_1
+            self.len_out_decry = len_2
+            self.len_diff_decry = len_diff
         result = (len_diff / (len_1 + len_2))
         return (result)
 
-    def test_crypt(self):
-        self.cry_sim = self.similarity_test(self.msg, self.cypher)
+    def test_crypt(self, crypt=True):
+        self.cry_sim = self.similarity_test(self.msg, self.cypher, crypt)
         if self.cry_sim >= 1:
             self.correct_crypt = True
         else:
             self.correct_crypt = False
         #print("\nRESULT: ", "DIFF", self.diff_len, " -- ", "ORIG ", self.orig_len, " -------> ", correctness, "%")
 
-    def test_decrypt(self):
-        self.decry_sim = self.similarity_test(self.msg, self.uncrypted)
+    def test_decrypt(self, crypt=True):
+        self.decry_sim = self.similarity_test(self.msg, self.uncrypted, crypt)
         if self.decry_sim == 0:
             self.correct_decrypt = True
         else:
@@ -147,19 +199,21 @@ class Testor():
     def one_round(self):
         self.new_test()
         columns = shutil.get_terminal_size().columns
-        print("\n\n\n\t", BOLD, UNDERLINE, "Test n*", self.tests_to_do, RESET)
+        if self.verbosity > 0:
+            print("\n\t")
+        print(BOLD, UNDERLINE, "Test n*", self.tests_done, "/", self.tests_to_do, RESET)
         #Crypt
         self.time_took_cry, self.cmd_cry = execute(self.msg, self.key, self.cypher, self.cycles, crypt=True)
-        self.test_crypt()
-        self.display(crypt=True)
+        self.test_crypt(crypt=True)
 
         #Uncrypt
         self.time_took_decry, self.cmd_decry = execute(self.cypher, self.key, self.uncrypted, self.cycles, crypt=False)
-        self.test_decrypt()
+        self.test_decrypt(crypt=False)
+        self.display(crypt=True)
         self.display(crypt=False)
-        if self.correct_decrypt == False or self.correct_crypt == False:
+        if self.correct_decrypt == False or self.correct_crypt == False or self.stop:
             self.investigate()
-        self.tests_to_do -= 1
+        self.tests_done += 1
 
     def display_time(self, crypt=True):
         if crypt:
@@ -175,55 +229,84 @@ class Testor():
         columns = shutil.get_terminal_size().columns
         n = 10
         if crypt:
-            print(PURPLE, ("=" * n) + " " * 5 + "CRYPT" + " " * 5 + ("=" * n))
-            print(PURPLE, "Message    ", RED, self.msg) 
-            print(PURPLE, "Key        ", RED, self.key)
-            print(PURPLE, "Cycles       ", YELLOW, self.cycles)
-            print(PURPLE, "to file    ", RESET, self.cypher, RESET)
-            print(PURPLE, "Command    ", RESET, self.cmd_cry)
-            print(PURPLE, "Time         ", RESET, str(self.time_took_cry)[0:5], end="")
-            print(PURPLE, "\tTime cycle ", RESET, str((self.time_took_cry) / self.cycles)[0:7], RESET)
-            print(PURPLE, "               Len plaintext  ", self.len_in)
-            print(PURPLE, "               Len output     ", self.len_out)
-            print(PURPLE, "               Len diff       ", self.len_diff)
-            print(PURPLE, "File difference       ", (self.cry_sim) // 0.01, "%")
-            if self.correct_crypt == False:
-                print(RED,"\tFAILURE", RESET)
-            else:
-                print(GREEN, "\tSUCCESS", RESET)
+            COLOR = PURPLE
         else:
-            print(BLUE, ("=" * n)  + " " * 4 + "UNCRYPT"  + " " * 4 + ("=" * n))
-            print(BLUE, "Message    ", RED, self.cypher)
-            print(BLUE, "Key        ", RED, self.key)
-            print(BLUE, "Cycles       ", YELLOW, self.cycles)
-            print(BLUE, "to file    ", RESET, self.uncrypted, RESET)
-            print(BLUE, "Command    ", RESET, self.cmd_decry)
-            print(BLUE, "Time         ", RESET, str(self.time_took_decry)[0:5], end="")
-            print(BLUE, "\tTime cycle ", RESET, str((self.time_took_decry) / self.cycles)[0:7], RESET)
-            print(BLUE,"               Len plaintext  ", self.len_in)
-            print(BLUE,"               Len output     ", self.len_out)
-            print(BLUE,"               Len diff       ", self.len_diff)
-            print(BLUE, "File difference       ", (self.decry_sim) // 0.01, "%")
-            if self.correct_decrypt == False:
-                print(RED,"\tFAILURE", RESET)
+            COLOR = BLUE
+        tmp_verb = self.verbosity
+        if self.correct_decrypt == False or self.correct_crypt == False:
+            self.verbosity = 5
+        if self.verbosity > 0:
+            if crypt:
+                print(COLOR, ("=" * n) + " " * 5 + "CRYPT" + " " * 5 + ("=" * n))
             else:
-                print(GREEN, "\tSUCCESS", RESET)
-        #print("")
+                print(COLOR, ("=" * n)  + " " * 4 + "UNCRYPT"  + " " * 4 + ("=" * n))
+        if self.verbosity > 0:
+            if crypt:
+                print(COLOR, "Message    ", RED, self.msg) 
+            else:
+                print(COLOR, "Message    ", RED, self.cypher)
+            print(COLOR, "Key        ", RED, self.key)
+        if self.verbosity > 0:
+            print(COLOR, "Cycles       ", YELLOW, self.cycles)
+        if self.verbosity > 2:
+            if crypt:
+                print(COLOR, "to file    ", RESET, self.cypher, RESET)
+            else:
+                print(COLOR, "to file    ", RESET, self.uncrypted, RESET)
+            if crypt:
+                print(COLOR, "Command    ", RESET, self.cmd_cry)
+            else:
+                print(COLOR, "Command    ", RESET, self.cmd_decry)
+            if crypt:
+                print(COLOR, "Time         ", RESET, str(self.time_took_cry)[0:5])
+                if self.cycles:
+                    print(COLOR, "Time cycle   ", RESET, str((self.time_took_cry) / self.cycles)[0:7], RESET)
+            else:
+                print(COLOR, "Time         ", RESET, str(self.time_took_decry)[0:5])
+                if self.cycles:
+                    print(COLOR, "Time cycle   ", RESET, str((self.time_took_decry) / self.cycles)[0:7], RESET)
+        if self.verbosity > 1:
+            if crypt:
+                print(COLOR, "               Len plaintext  ", self.len_in_cry)
+                print(COLOR, "               Len output     ", self.len_out_cry)
+                print(COLOR, "               Len diff       ", self.len_diff_cry)
+            else:
+                print(COLOR, "               Len plaintext  ", self.len_in_decry)
+                print(COLOR, "               Len output     ", self.len_out_decry)
+                print(COLOR, "               Len diff       ", self.len_diff_decry)
+            if crypt:
+                print(COLOR, "File difference       ", (self.cry_sim) // 0.01, "%")
+            else:
+                print(COLOR, "File difference       ", (self.decry_sim) // 0.01, "%")
+        if crypt:
+            if self.correct_crypt == False:
+                print(RED,"FAILURE", RESET)
+            else:
+                print(GREEN, "SUCCESS", RESET)
+        else:
+            if self.correct_decrypt == False:
+                print(RED,"FAILURE", RESET)
+            else:
+                print(GREEN, "SUCCESS", RESET)
+        self.verbosity = tmp_verb
 
-def reset_folders():
-    os.system("rm -rf " + path_to_crypt)
-    os.system("mkdir -p " + path_to_crypt)
-    print("Cypher    folder has been reset !")
-    os.system("rm -rf " + path_to_uncrypt)
-    os.system("mkdir -p " + path_to_uncrypt)
-    print("Uncrypted folder has been reset !")
-    os.system("make")
+    def reset_folders(self):
+        os.system("rm -rf " + self.path_to_crypt)
+        os.system("mkdir -p " + self.path_to_crypt)
+        print("Cypher    folder has been reset !")
+        os.system("rm -rf " + self.path_to_uncrypt)
+        os.system("mkdir -p " + self.path_to_uncrypt)
+        print("Uncrypted folder has been reset !")
+        if self.fsanitize == True:
+            os.system("make re debug=1 -C libft -j8")
+            os.system("make re f=f -j8")
+        else:
+            os.system("make")
 
 
 if __name__ == "__main__":
-    reset_folders()
     testor = Testor()
-    while testor.tests_to_do:
+    while testor.tests_done < testor.tests_to_do:
         testor.one_round()
 
 
