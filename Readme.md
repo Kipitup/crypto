@@ -23,6 +23,6 @@ This library contains basic cryptographic algorithms and can be used as building
 
 | Algorithm Type              | Algorithm Purpose           | Implementation details                                       |
 | --------------------------- | --------------------------- | ------------------------------------------------------------ |
-| Block Cypher | Symmetric Algorithms        | [AES-256-GCM](http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf) |
+| Block Cypher | Symmetric Algorithms        | AES |
 | Block Cypher | Symmetric Algorithms | Feistel cypher|
 |Functions | Key Derivation              | to be filled |
