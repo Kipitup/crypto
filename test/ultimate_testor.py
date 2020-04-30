@@ -6,7 +6,7 @@ import time
 import random
 from color import *
 import shutil
-
+import platform
 import argparse
 
 
@@ -30,7 +30,11 @@ def diff(file_key, file_msg, on):
         os.system(command_line)
         return len(read_file(temp_file))
     else:
-        command_line = "diff -ay --width=" + str(columns) + " --color=always " + file_key + " " + file_msg
+        if platform.system() == "Linux": 
+            color_ = " --color=always "
+        else:
+            color_ = ""
+        command_line = "diff -ay --width=" + str(columns) + color_ + file_key + " " + file_msg
     print(command_line)
     print(RED, "\n", "~" * columns, RESET)
     #print("DIIF IS:")
@@ -58,7 +62,6 @@ def write_file(path, content):
 class Testor():
     def __init__(self):
         self.max_len = -1
-        self.cycles_user = None
         self.directory = os.sys.argv[0][0:-len("ultimate_testor.py")]
         self.path_to_tests = self.directory + "unit_test"
         self.path_to_crypt = self.directory + "crypted/"
@@ -83,7 +86,7 @@ class Testor():
                     help="user specified msg and key")
         parser.add_argument("-o", "--folder", type=str,
                     help="user specified unit_test folder")
-        parser.add_argument("-c", "--cycles", type=int,
+        parser.add_argument("-c", "--cycles", type=int, default=-1,
                     help="nb of feistel cycles (default random)")
         parser.add_argument("-s", "--stop", action='store_true',
                     help="stop after each test")
@@ -94,9 +97,13 @@ class Testor():
         if args.folder:
             self.path_to_tests = args.folder
         
-        if args.random:
+        if args.random != None:
             self.select = "RANDOM"
-            self.tests_to_do = args.random
+            self.get_list_of_files()
+            if random:
+                self.tests_to_do = args.random
+            else:
+                self.tests_to_do = (len(self.list_of_files) * len(self.list_of_files)) - 1
         elif args.user_files:
             self.select = "USER_FILES"
             self.file_msg = args.user_files[0]
@@ -107,8 +114,11 @@ class Testor():
             self.get_list_of_files()
             self.tests_to_do = (len(self.list_of_files) * len(self.list_of_files)) - 1
         self.verbosity = args.verbosity
-        if args.cycles:
-            self.cycles_user = args.cycles
+        if args.cycles >= 0:
+            self.cycles_set = args.cycles
+            self.cycles_user = True
+        else:
+            self.cycles_user = False
         if args.fsanitize:
             self.fsanitize = True
         if args.stop:
@@ -126,8 +136,8 @@ class Testor():
 
     def new_test(self):
         self.select_msg_and_key()
-        if self.cycles_user != None:
-            self.cycles = self.cycles_user
+        if self.cycles_user:
+            self.cycles = self.cycles_set
         else:
             self.cycles = random.randint(0, 30)
 
