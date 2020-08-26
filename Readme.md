@@ -26,3 +26,12 @@ This library contains basic cryptographic algorithms and can be used as building
 | Block Cypher | Symmetric Algorithms        | AES |
 | Block Cypher | Symmetric Algorithms | Feistel cypher|
 |Functions | Key Derivation              | to be filled |
+
+
+## AES
+
+**Key Expansion Algorithm**:
+
+The AES key expansion algorithm takes as input a four-word (16-byte) key and produces a linear array of 44 words (176 bytes).
+
+![AES-Encryption-1-A-AES-The-Advanced-Encryption-Standard-AES-standard-became](https://user-images.githubusercontent.com/33808300/91316932-b3d0e800-e7b9-11ea-81d4-3ae90f878ec8.png)
