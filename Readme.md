@@ -35,3 +35,10 @@ This library contains basic cryptographic algorithms and can be used as building
 The AES key expansion algorithm takes as input a four-word (16-byte) key and produces a linear array of 44 words (176 bytes).
 
 ![AES-Encryption-1-A-AES-The-Advanced-Encryption-Standard-AES-standard-became](https://user-images.githubusercontent.com/33808300/91316932-b3d0e800-e7b9-11ea-81d4-3ae90f878ec8.png)
+
+
+## Feistel Cypher
+
+> In cryptography, a Feistel cipher is a symmetric structure used in the construction of block ciphers, named after the German-born physicist and cryptographer Horst Feistel who did pioneering research while working for IBM (USA); it is also commonly known as a Feistel network. A large proportion of block ciphers use the scheme, including the Data Encryption Standard (DES). The Feistel structure has the advantage that encryption and decryption operations are very similar, even identical in some cases, requiring only a reversal of the key schedule. Therefore, the size of the code or circuitry required to implement such a cipher is nearly halved. https://en.wikipedia.org/wiki/Feistel_cipher
+
+![511px-Feistel_cipher_diagram_en svg](https://user-images.githubusercontent.com/33808300/91319110-48d4e080-e7bc-11ea-8f19-5a3605278ceb.png)
