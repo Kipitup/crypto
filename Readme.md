@@ -28,6 +28,20 @@ This library contains basic cryptographic algorithms and can be used as building
 |Functions | Key Derivation              | to be filled |
 
 
+## How to use
+
+#### Pre required: Make, GCC. Optionally python3 for the tester.
+
+First of all, open a terminal, go into the project and build it:   
+```  
+make -j8
+```
+
+We provided a python script to test all algorithms.
+```
+python3 test/ultimate_testor.py
+```
+
 ## AES
 
 **Key Expansion Algorithm**:
